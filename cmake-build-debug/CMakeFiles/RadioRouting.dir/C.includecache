@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+M:/RadioRouting/core/main.c
+stdlib.h
+-
+protocol.h
+M:/RadioRouting/core/protocol.h
+../tests/paxample.h
+M:/RadioRouting/tests/paxample.h
+
+M:/RadioRouting/core/protocol.h
+
+M:/RadioRouting/tests/paxample.h
+
