@@ -16,6 +16,7 @@
 typedef enum {
     SLEEP,
     DECLARING_MY_POT_ROUTERS,
+    ROUTER_WAIT_ASK,
     SELECT_ROUTERS,
     DECLARING_RESULT_OF_SELECT,
     BIND_ACCEPTED,
@@ -88,6 +89,7 @@ Packet 			ParcerHeader(const unsigned char *stream);						// Parcer of input str
 void 			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);			// Analyzing type of packet
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);
+unsigned char   PacketValidator(WorkTable * ram, Packet pack);
 //--------------------------------------------------------------
 void 			pl_Handler_00(WorkTable * ram,Packet pack);
 void			pl_Handler_01(WorkTable * ram,Packet pack);

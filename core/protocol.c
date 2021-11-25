@@ -45,6 +45,20 @@ void          ServiceFieldAdding(WorkTable *ram,Packet pack){
     ram->my_seance                       = pack._seance;
     ram->my_time                         = pack._synctime;
 }
+unsigned char PacketValidator(WorkTable * ram, Packet pack){
+
+    switch(pack._typepacket)
+    {
+        case 0x00:	if(ram->DEVICE == SLEEP || pack._session != ram->my_session)    {  return pack._typepacket; }   else { return 0x99; }
+        case 0x01:	if(ram->DEVICE == DECLARING_MY_POT_ROUTERS)                     {  return pack._typepacket; }   else { return 0x99; }
+        case 0x02:	if(ram->DEVICE == ROUTER_WAIT_ASK)                              {  return pack._typepacket; }	else { return 0x99; }
+        case 0x03:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
+        case 0x04:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
+        case 0x05:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
+        case 0x06:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
+    }
+    return pack._typepacket;
+}
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
 void pl_Handler_00(WorkTable * ram, Packet pack){
 
@@ -147,7 +161,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
 
     Packet buffer = ParcerHeader(stream);
     PrintPacket(buffer);
-    switch(buffer._typepacket)
+    switch(PacketValidator(ram, buffer))
     {
         case 0x00:	pl_Handler_00(ram, buffer);	break;
         case 0x01:	pl_Handler_01(ram, buffer);	break;
@@ -156,6 +170,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
         case 0x04:	pl_Handler_04(ram, buffer);	break;
         case 0x05:	pl_Handler_05(ram, buffer);	break;
         case 0x06:	pl_Handler_06(ram, buffer);	break;
+        case 0x99:  break;
     }
     ShowRAMTable(ram);
 
