@@ -49,13 +49,13 @@ unsigned char PacketValidator(WorkTable * ram, Packet pack){
 
     switch(pack._typepacket)
     {
-        case 0x00:	if(ram->DEVICE == SLEEP || pack._session != ram->my_session)    {  return pack._typepacket; }   else { return 0x99; }
-        case 0x01:	if(ram->DEVICE == DECLARING_MY_POT_ROUTERS)                     {  return pack._typepacket; }   else { return 0x99; }
-        case 0x02:	if(ram->DEVICE == ROUTER_WAIT_ASK)                              {  return pack._typepacket; }	else { return 0x99; }
-        case 0x03:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
-        case 0x04:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
-        case 0x05:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
-        case 0x06:	if(ram->DEVICE == SLEEP)                                        {  return pack._typepacket; }	else { return 0x99; }
+        case 0x00:	if(ram->STATUS == SLEEP || pack._session != ram->my_session)    {  return pack._typepacket; }   else { return 0x99; }
+        case 0x01:	if(ram->STATUS == LISTENING_MEDIUM)                             {  return pack._typepacket; }   else { return 0x99; }
+        case 0x02:	if(ram->STATUS == SELECT_ROUTERS)                               {  return pack._typepacket; }	else { return 0x99; }
+        case 0x03:	if(ram->STATUS == ROUTER_WAIT_ELECTION)                         {  return pack._typepacket; }	else { return 0x99; }
+        case 0x04:	if(ram->STATUS == READY)                                        {  return pack._typepacket; }	else { return 0x99; }
+        case 0x05:	if(ram->STATUS == UNO_MANY || ram->DEVICE == ROUTER)            {  return pack._typepacket; }	else { return 0x99; }
+        case 0x06:	if(ram->STATUS == UNO_MANY || ram->DEVICE == ROUTER)            {  return pack._typepacket; }	else { return 0x99; }
     }
     return pack._typepacket;
 }
@@ -116,7 +116,7 @@ void pl_Handler_03(WorkTable * ram, Packet pack){
     for(int i=0;i<pack._plen;i+=4){
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC){
-            ram->STATUS = BIND_ACCEPTED;
+            ram->STATUS = READY;
         }
         buffer = 0;
     }
@@ -127,7 +127,7 @@ void pl_Handler_04(WorkTable * ram, Packet pack){
     for(int i=0;i<pack._plen;i+=4){
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC){
-            ram->STATUS = I_FIND_MY_ADDRESS;
+            ram->STATUS = UNO_MANY;
         }
         buffer = 0;
     }

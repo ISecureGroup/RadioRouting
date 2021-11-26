@@ -15,15 +15,16 @@
 //----------------------ПЕРЕЧИСЛЕНИЯ----------------------------
 typedef enum {
     SLEEP,
-    DECLARING_MY_POT_ROUTERS,
-    ROUTER_WAIT_ASK,
+    AWAKING,
+    LISTENING_MEDIUM,
     SELECT_ROUTERS,
-    DECLARING_RESULT_OF_SELECT,
-    BIND_ACCEPTED,
-    BIND_NOT_CONFIRMED,
-    I_FIND_MY_ADDRESS,
-    MY_UNO_IS_PACKED,
-    RETRANSLATE
+    ROUTER_WAIT_ELECTION,
+    //////////////////
+    READY,
+    UNO_MANY,
+    /////////////////
+    RETRANSLATE,
+    MY_UNO_IS_PACKED
     } STATE;
 typedef enum {
     END_NODE,
