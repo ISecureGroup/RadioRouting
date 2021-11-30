@@ -59,6 +59,9 @@ unsigned char PacketValidator(WorkTable * ram, Packet pack){
     }
     return pack._typepacket;
 }
+int           getCurrentState() {
+
+}
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
 void pl_Handler_00(WorkTable * ram, Packet pack){
 
@@ -156,6 +159,28 @@ void pl_Handler_06(WorkTable * ram, Packet pack){
             }
         }
 }
+////////////////////////////////////////////////FACTORY////////////////////////////////////////////////////////
+void packet_Factory_00(WorkTable * ram){
+    
+}
+void packet_Factory_01(WorkTable * ram){
+
+}
+void packet_Factory_02(WorkTable * ram){
+
+}
+void packet_Factory_03(WorkTable * ram){
+
+}
+void packet_Factory_04(WorkTable * ram){
+
+}
+void packet_Factory_05(WorkTable * ram){
+
+}
+void packet_Factory_06(WorkTable * ram){
+
+}
 ////////////////////////////////////////////////MANAGER////////////////////////////////////////////////////////
 void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream){
 
@@ -172,6 +197,17 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
         case 0x06:	pl_Handler_06(ram, buffer);	break;
         case 0x99:  break;
     }
+    switch(getCurrentState())
+    {
+        case 0:	packet_Factory_00(ram);	break;
+        case 1:	packet_Factory_01(ram);	break;
+        case 2:	packet_Factory_02(ram);	break;
+        case 3:	packet_Factory_03(ram);	break;
+        case 4:	packet_Factory_04(ram);	break;
+        case 5:	packet_Factory_05(ram);	break;
+        case 6:	packet_Factory_06(ram);	break;
+    }
+
     ShowRAMTable(ram);
 
 }
