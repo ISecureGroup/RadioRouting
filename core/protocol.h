@@ -76,12 +76,15 @@ typedef struct  WorkTable {
     unsigned char	my_level;
     unsigned short	my_time;
     unsigned char	my_seance;
+    unsigned char   packet_order;
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long	my_subrouters[MAX_SUB_ROUTERS];
     unsigned long	my_routers[2];
     unsigned long	i_reserve_router_from[MAX_SUB_ROUTERS];
     unsigned long	my_end_devices[MAX_END_DEVICES];
     Packet          output_packet;
+    char            output_payload[100];
+    /////////////   КОНЕЦ
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
 //------------------------МЕТОДЫ---------------------------
 Packet 			ParcerHeader(const unsigned char *stream);						                                            //ПАРСЕР ЗАГОЛОВКА
@@ -90,6 +93,7 @@ unsigned long   GetAddress(const unsigned char *stream, int startbyte);         
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДОУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 unsigned char   PacketValidator(WorkTable * ram, Packet pack);
 int             getCurrentState();
+void            packetConstructor(WorkTable *ram,unsigned char   _startpacket,unsigned char	_typepacket,unsigned long	_sourceaddres,unsigned long	_destinationaddres,unsigned short	_synctime,unsigned char	_session,unsigned char	_level,unsigned char	_seance,unsigned char	_nodestate,unsigned char	_ordernumder,unsigned char	_ttl,unsigned long 	_nextaddres,unsigned long 	_prevaddres,unsigned short 	_reserve,unsigned char	*_payload);
 //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
 //------------------------FACTORY---------------------------
 void            packet_Factory_00(WorkTable * ram);
