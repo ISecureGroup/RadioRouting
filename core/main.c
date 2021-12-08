@@ -8,21 +8,13 @@ WorkTable       RAM;
 int             RSSI;
 /////////////////////ФУНКЦИЯ СТАРТ ВЫЗЫВАЕТСЯ ЕДИНОЖДЫ ПРИ ЗАПУСКЕ ПРОГРАММЫ
 void start(){
-    RAM.MAC = 0x69696969;
-    RAM.STATUS = SLEEP;
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType1);
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType2_0);
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType3);
-    PacketManager(SensorData_0, RSSI, &RAM, PacketType4);
-    PacketManager(SensorData_1, RSSI, &RAM, PacketType5_0);
-    PacketManager(SensorData_1, RSSI, &RAM, PacketType5_1);
-    PacketManager(SensorData_1, RSSI, &RAM, PacketType6);
+    RAM.MAC = 0x69696969;                                                                                               // Мак адрес устройства, в дальнейшем будет случайным
+    RAM.STATUS = SLEEP;                                                                                                 // Первоначальное состояние устройства
 }
 /////////////////////ОСНОВНОЙ ЦИКЛ МИКРОКОНТРОЛЛЕРА
 void loop(){
-
+    //Осн.Менеджер(Данные с датчиков, Адрес основной памяти, пакет)
+    //PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);
 }
 ////////////////////ТОЧКА ВХОДА В ПРОГРАММУ
 int main() {
