@@ -84,6 +84,10 @@ void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsign
         else
             break;
 }
+////////////////////////////////////////////////CONTROLLER/////////////////////////////////////////////////////
+int           MAIN_CONTROLLER(WorkTable * ram){
+
+}
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
 void pl_Handler_00(WorkTable * ram, Packet pack){
 
@@ -319,6 +323,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
 
     Packet buffer = ParcerHeader(stream);
     PrintPacket(buffer);
+    //------------Обработчики-----------------
     switch(PacketValidator(ram, buffer))
     {
         case 0x00:	pl_Handler_00(ram, buffer);	break;
@@ -330,6 +335,9 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
         case 0x06:	pl_Handler_06(ram, buffer);	break;
         case 0x99:  break;
     }
+    //---------Управляющая логика-------------
+    MAIN_CONTROLLER(ram);
+    //--------------Фабрика-------------------
     switch(getCurrentState())
     {
         case 0:	packet_Factory_00(ram);	break;
