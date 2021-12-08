@@ -62,22 +62,7 @@ unsigned char PacketValidator(WorkTable * ram, Packet pack){
 int           getCurrentState(){
 
 }
-void          packetConstructor(WorkTable *ram,
-                                unsigned char _startpacket,
-                                unsigned char _typepacket,
-                                unsigned long _sourceaddres,
-                                unsigned long _destinationaddres,
-                                unsigned short _synctime,
-                                unsigned char _level,
-                                unsigned char _session,
-                                unsigned char _seance,
-                                unsigned char _nodestate,
-                                unsigned char _ordernumder,
-                                unsigned char _ttl,
-                                unsigned long _nextaddres,
-                                unsigned long _prevaddres,
-                                unsigned short _reserve,
-                                unsigned char *_payload)
+void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,unsigned char *_payload)
 {
     ram->output_packet._startpacket         = _startpacket;
     ram->output_packet._typepacket          = _typepacket;
@@ -98,6 +83,10 @@ void          packetConstructor(WorkTable *ram,
             ram->output_packet._payload[i]      = _payload[i];
         else
             break;
+}
+////////////////////////////////////////////////CONTROLLER/////////////////////////////////////////////////////
+int           MAIN_CONTROLLER(WorkTable * ram){
+
 }
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
 void pl_Handler_00(WorkTable * ram, Packet pack){
@@ -274,7 +263,7 @@ void packet_Factory_04(WorkTable * ram){
     packetConstructor(ram,
                       '$',              //$
                       0x04,             //ТИП ПАКЕТА
-                      ram->MAC,                   //АДРЕС ОТПРАВИТЕЛЯ
+                      ram->gateway,                   //АДРЕС ОТПРАВИТЕЛЯ
                       0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
                       ram->my_time,               //ВРЕМЯ
                       ram->my_level,              //УРОВЕНЬ
@@ -290,25 +279,43 @@ void packet_Factory_04(WorkTable * ram){
 
 }
 void packet_Factory_05(WorkTable * ram){
+    int choise = MAIN_ROUTER;
     packetConstructor(ram,
-                      '$',                      //$
-                      0x05,                     //ТИП ПАКЕТА
-                      ram->MAC,                           //АДРЕС ОТПРАВИТЕЛЯ
-                      ram->my_routers[0],   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,                     //ВРЕМЯ
-                      ram->my_level,                    //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      ram->my_seance,                //СЕАНС
-                      0x00,              //РОЛЬ МОДУЛЯ
-                      ram->packet_order,          //НОМЕР ПАКЕТА
-                      0x1e,                   //TTL
-                      0xffffffff,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,             //РЕЗЕРВ
-                      ram->output_payload);      //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                                //$
+                      0x05,                               //ТИП ПАКЕТА
+                      ram->MAC,                                     //АДРЕС ОТПРАВИТЕЛЯ
+                      ram->my_routers[choise],                      //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,                                 //ВРЕМЯ
+                      ram->my_level,                                //УРОВЕНЬ
+                      ram->my_session,                              //СЕССИЯ
+                      ram->my_seance,                               //СЕАНС
+                      0x00,                                //РОЛЬ МОДУЛЯ
+                      ram->packet_order,                            //НОМЕР ПАКЕТА
+                      0x01,                                     //TTL
+                      0x55555555,                         //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,                         //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,                               //РЕЗЕРВ
+                      ram->output_payload);                        //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
 void packet_Factory_06(WorkTable * ram){
+    int choise = MAIN_ROUTER;
+    packetConstructor(ram,
+                      '$',                                //$
+                      0x06,                               //ТИП ПАКЕТА
+                      ram->MAC,                                     //АДРЕС ОТПРАВИТЕЛЯ
+                      ram->gateway,                                 //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,                                 //ВРЕМЯ
+                      ram->my_level,                                //УРОВЕНЬ
+                      ram->my_session,                              //СЕССИЯ
+                      ram->my_seance,                               //СЕАНС
+                      ram->my_role,                                 //РОЛЬ МОДУЛЯ
+                      ram->packet_order,                            //НОМЕР ПАКЕТА
+                      0x01,                                     //TTL
+                      ram->my_routers[choise],                      //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      ram->temporary_prev_address,                  //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,                               //РЕЗЕРВ
+                      ram->output_payload);                        //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
 ////////////////////////////////////////////////MANAGER////////////////////////////////////////////////////////
@@ -316,6 +323,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
 
     Packet buffer = ParcerHeader(stream);
     PrintPacket(buffer);
+    //------------Обработчики-----------------
     switch(PacketValidator(ram, buffer))
     {
         case 0x00:	pl_Handler_00(ram, buffer);	break;
@@ -327,6 +335,9 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
         case 0x06:	pl_Handler_06(ram, buffer);	break;
         case 0x99:  break;
     }
+    //---------Управляющая логика-------------
+    MAIN_CONTROLLER(ram);
+    //--------------Фабрика-------------------
     switch(getCurrentState())
     {
         case 0:	packet_Factory_00(ram);	break;
