@@ -142,29 +142,101 @@ core\main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\main.c.s
 .PHONY : core\main.c.s
 
-core\protocol.obj: core\protocol.c.obj
-.PHONY : core\protocol.obj
+core\protocol\controller\controller.obj: core\protocol\controller\controller.c.obj
+.PHONY : core\protocol\controller\controller.obj
 
 # target to build an object file
-core\protocol.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol.c.obj
-.PHONY : core\protocol.c.obj
+core\protocol\controller\controller.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj
+.PHONY : core\protocol\controller\controller.c.obj
 
-core\protocol.i: core\protocol.c.i
-.PHONY : core\protocol.i
+core\protocol\controller\controller.i: core\protocol\controller\controller.c.i
+.PHONY : core\protocol\controller\controller.i
 
 # target to preprocess a source file
-core\protocol.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol.c.i
-.PHONY : core\protocol.c.i
+core\protocol\controller\controller.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.i
+.PHONY : core\protocol\controller\controller.c.i
 
-core\protocol.s: core\protocol.c.s
-.PHONY : core\protocol.s
+core\protocol\controller\controller.s: core\protocol\controller\controller.c.s
+.PHONY : core\protocol\controller\controller.s
 
 # target to generate assembly for a file
-core\protocol.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol.c.s
-.PHONY : core\protocol.c.s
+core\protocol\controller\controller.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.s
+.PHONY : core\protocol\controller\controller.c.s
+
+core\protocol\factorys\factorys.obj: core\protocol\factorys\factorys.c.obj
+.PHONY : core\protocol\factorys\factorys.obj
+
+# target to build an object file
+core\protocol\factorys\factorys.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj
+.PHONY : core\protocol\factorys\factorys.c.obj
+
+core\protocol\factorys\factorys.i: core\protocol\factorys\factorys.c.i
+.PHONY : core\protocol\factorys\factorys.i
+
+# target to preprocess a source file
+core\protocol\factorys\factorys.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.i
+.PHONY : core\protocol\factorys\factorys.c.i
+
+core\protocol\factorys\factorys.s: core\protocol\factorys\factorys.c.s
+.PHONY : core\protocol\factorys\factorys.s
+
+# target to generate assembly for a file
+core\protocol\factorys\factorys.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.s
+.PHONY : core\protocol\factorys\factorys.c.s
+
+core\protocol\handlers\handlers.obj: core\protocol\handlers\handlers.c.obj
+.PHONY : core\protocol\handlers\handlers.obj
+
+# target to build an object file
+core\protocol\handlers\handlers.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj
+.PHONY : core\protocol\handlers\handlers.c.obj
+
+core\protocol\handlers\handlers.i: core\protocol\handlers\handlers.c.i
+.PHONY : core\protocol\handlers\handlers.i
+
+# target to preprocess a source file
+core\protocol\handlers\handlers.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.i
+.PHONY : core\protocol\handlers\handlers.c.i
+
+core\protocol\handlers\handlers.s: core\protocol\handlers\handlers.c.s
+.PHONY : core\protocol\handlers\handlers.s
+
+# target to generate assembly for a file
+core\protocol\handlers\handlers.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.s
+.PHONY : core\protocol\handlers\handlers.c.s
+
+core\protocol\protocol.obj: core\protocol\protocol.c.obj
+.PHONY : core\protocol\protocol.obj
+
+# target to build an object file
+core\protocol\protocol.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj
+.PHONY : core\protocol\protocol.c.obj
+
+core\protocol\protocol.i: core\protocol\protocol.c.i
+.PHONY : core\protocol\protocol.i
+
+# target to preprocess a source file
+core\protocol\protocol.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.i
+.PHONY : core\protocol\protocol.c.i
+
+core\protocol\protocol.s: core\protocol\protocol.c.s
+.PHONY : core\protocol\protocol.s
+
+# target to generate assembly for a file
+core\protocol\protocol.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\RadioRouting.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.s
+.PHONY : core\protocol\protocol.c.s
 
 tests\source\showme.obj: tests\source\showme.c.obj
 .PHONY : tests\source\showme.obj
@@ -202,9 +274,18 @@ help:
 	@echo ... core/main.obj
 	@echo ... core/main.i
 	@echo ... core/main.s
-	@echo ... core/protocol.obj
-	@echo ... core/protocol.i
-	@echo ... core/protocol.s
+	@echo ... core/protocol/controller/controller.obj
+	@echo ... core/protocol/controller/controller.i
+	@echo ... core/protocol/controller/controller.s
+	@echo ... core/protocol/factorys/factorys.obj
+	@echo ... core/protocol/factorys/factorys.i
+	@echo ... core/protocol/factorys/factorys.s
+	@echo ... core/protocol/handlers/handlers.obj
+	@echo ... core/protocol/handlers/handlers.i
+	@echo ... core/protocol/handlers/handlers.s
+	@echo ... core/protocol/protocol.obj
+	@echo ... core/protocol/protocol.i
+	@echo ... core/protocol/protocol.s
 	@echo ... tests/source/showme.obj
 	@echo ... tests/source/showme.i
 	@echo ... tests/source/showme.s
