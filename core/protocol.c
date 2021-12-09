@@ -1,7 +1,11 @@
 #include "protocol.h"
 #include "../tests/showme.h"
-
 ////////////////////////////////////////////////TOOLKIT////////////////////////////////////////////////////////
+unsigned long GetAddress(const unsigned char *stream, int startbyte){
+    unsigned long buf = 0;
+    return ((((((((buf + stream[startbyte])<<8) + stream[startbyte+1])<<8)+ stream[startbyte+2])<<8)+ stream[startbyte+3]));
+}
+////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
 Packet        ParcerHeader(const unsigned char *stream){
 
     Packet 				buffer;								//  Temporary storage of parcer packet
@@ -35,17 +39,13 @@ Packet        ParcerHeader(const unsigned char *stream){
 
     return buffer;
 }
-unsigned long GetAddress(const unsigned char *stream, int startbyte){
-    unsigned long buf = 0;
-    return ((((((((buf + stream[startbyte])<<8) + stream[startbyte+1])<<8)+ stream[startbyte+2])<<8)+ stream[startbyte+3]));
-}
 void          ServiceFieldAdding(WorkTable *ram,Packet pack){
     ram->my_session                      = pack._session;
     ram->my_level                        = pack._level + 1;
     ram->my_seance                       = pack._seance;
     ram->my_time                         = pack._synctime;
 }
-unsigned char PacketValidator(WorkTable * ram, Packet pack){
+unsigned char Validator(WorkTable * ram, Packet pack){
 
     switch(pack._typepacket)
     {
@@ -324,7 +324,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     Packet buffer = ParcerHeader(stream);
     PrintPacket(buffer);
     //------------Обработчики-----------------
-    switch(PacketValidator(ram, buffer))
+    switch(Validator(ram, buffer))
     {
         case 0x00:	pl_Handler_00(ram, buffer);	break;
         case 0x01:	pl_Handler_01(ram, buffer);	break;

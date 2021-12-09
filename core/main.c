@@ -10,6 +10,7 @@ int             RSSI;
 void start(){
     RAM.MAC = 0x69696969;                                                                                               // Мак адрес устройства, в дальнейшем будет случайным
     RAM.STATUS = SLEEP;                                                                                                 // Первоначальное состояние устройства
+    PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);
 }
 /////////////////////ОСНОВНОЙ ЦИКЛ МИКРОКОНТРОЛЛЕРА
 void loop(){
