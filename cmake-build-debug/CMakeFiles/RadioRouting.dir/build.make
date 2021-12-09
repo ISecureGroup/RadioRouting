@@ -74,23 +74,23 @@ CMakeFiles\RadioRouting.dir\core\main.c.s: cmake_force
  /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\main.c.s /c M:\RadioRouting\core\main.c
 <<
 
-CMakeFiles\RadioRouting.dir\core\protocol.c.obj: CMakeFiles\RadioRouting.dir\flags.make
-CMakeFiles\RadioRouting.dir\core\protocol.c.obj: ..\core\protocol.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/RadioRouting.dir/core/protocol.c.obj"
+CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: CMakeFiles\RadioRouting.dir\flags.make
+CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\protocol.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/RadioRouting.dir/core/protocol/protocol.c.obj"
 	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\RadioRouting.dir\core\protocol.c.obj /FdCMakeFiles\RadioRouting.dir\ /FS -c M:\RadioRouting\core\protocol.c
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj /FdCMakeFiles\RadioRouting.dir\ /FS -c M:\RadioRouting\core\protocol\protocol.c
 <<
 
-CMakeFiles\RadioRouting.dir\core\protocol.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RadioRouting.dir/core/protocol.c.i"
-	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe > CMakeFiles\RadioRouting.dir\core\protocol.c.i @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E M:\RadioRouting\core\protocol.c
+CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RadioRouting.dir/core/protocol/protocol.c.i"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe > CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.i @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E M:\RadioRouting\core\protocol\protocol.c
 <<
 
-CMakeFiles\RadioRouting.dir\core\protocol.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RadioRouting.dir/core/protocol.c.s"
+CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RadioRouting.dir/core/protocol/protocol.c.s"
 	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\protocol.c.s /c M:\RadioRouting\core\protocol.c
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\protocol\protocol.c.s /c M:\RadioRouting\core\protocol\protocol.c
 <<
 
 CMakeFiles\RadioRouting.dir\tests\source\showme.c.obj: CMakeFiles\RadioRouting.dir\flags.make
@@ -112,21 +112,84 @@ CMakeFiles\RadioRouting.dir\tests\source\showme.c.s: cmake_force
  /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\tests\source\showme.c.s /c M:\RadioRouting\tests\source\showme.c
 <<
 
+CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: CMakeFiles\RadioRouting.dir\flags.make
+CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: ..\core\protocol\controller\controller.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/RadioRouting.dir/core/protocol/controller/controller.c.obj"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj /FdCMakeFiles\RadioRouting.dir\ /FS -c M:\RadioRouting\core\protocol\controller\controller.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RadioRouting.dir/core/protocol/controller/controller.c.i"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe > CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.i @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E M:\RadioRouting\core\protocol\controller\controller.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RadioRouting.dir/core/protocol/controller/controller.c.s"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.s /c M:\RadioRouting\core\protocol\controller\controller.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj: CMakeFiles\RadioRouting.dir\flags.make
+CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj: ..\core\protocol\factorys\factorys.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/RadioRouting.dir/core/protocol/factorys/factorys.c.obj"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj /FdCMakeFiles\RadioRouting.dir\ /FS -c M:\RadioRouting\core\protocol\factorys\factorys.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RadioRouting.dir/core/protocol/factorys/factorys.c.i"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe > CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.i @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E M:\RadioRouting\core\protocol\factorys\factorys.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RadioRouting.dir/core/protocol/factorys/factorys.c.s"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.s /c M:\RadioRouting\core\protocol\factorys\factorys.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj: CMakeFiles\RadioRouting.dir\flags.make
+CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj: ..\core\protocol\handlers\handlers.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/RadioRouting.dir/core/protocol/handlers/handlers.c.obj"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj /FdCMakeFiles\RadioRouting.dir\ /FS -c M:\RadioRouting\core\protocol\handlers\handlers.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RadioRouting.dir/core/protocol/handlers/handlers.c.i"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe > CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.i @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E M:\RadioRouting\core\protocol\handlers\handlers.c
+<<
+
+CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RadioRouting.dir/core/protocol/handlers/handlers.c.s"
+	C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\cl.exe @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.s /c M:\RadioRouting\core\protocol\handlers\handlers.c
+<<
+
 # Object files for target RadioRouting
 RadioRouting_OBJECTS = \
 "CMakeFiles\RadioRouting.dir\core\main.c.obj" \
-"CMakeFiles\RadioRouting.dir\core\protocol.c.obj" \
-"CMakeFiles\RadioRouting.dir\tests\source\showme.c.obj"
+"CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj" \
+"CMakeFiles\RadioRouting.dir\tests\source\showme.c.obj" \
+"CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj" \
+"CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj" \
+"CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj"
 
 # External object files for target RadioRouting
 RadioRouting_EXTERNAL_OBJECTS =
 
 RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\main.c.obj
-RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\protocol.c.obj
+RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj
 RadioRouting.exe: CMakeFiles\RadioRouting.dir\tests\source\showme.c.obj
+RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj
+RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj
+RadioRouting.exe: CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj
 RadioRouting.exe: CMakeFiles\RadioRouting.dir\build.make
 RadioRouting.exe: CMakeFiles\RadioRouting.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable RadioRouting.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=M:\RadioRouting\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking C executable RadioRouting.exe"
 	"C:\Program Files\JetBrains\CLion 2021.2.3\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\RadioRouting.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100190~1.0\x86\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100190~1.0\x86\mt.exe --manifests -- C:\PROGRA~2\MICROS~3\2019\COMMUN~1\VC\Tools\MSVC\1428~1.299\bin\Hostx86\x86\link.exe /nologo @CMakeFiles\RadioRouting.dir\objects1.rsp @<<
  /out:RadioRouting.exe /implib:RadioRouting.lib /pdb:M:\RadioRouting\cmake-build-debug\RadioRouting.pdb /version:0.0 /machine:X86 /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../../core/protocol.h"
+#include "../../core/protocol/protocol.h"
 
 void PrintStatus(STATE stt){
     switch (stt) {
@@ -27,7 +27,7 @@ void ShowRAMTable(WorkTable *ram){
         i++;
     }
     printf("|------------------------------------------------------------------------------------------\n");
-    printf("|  Уровень %x	Время 	%x   Статус ->",	ram->my_level, ram->my_time); PrintStatus(ram->STATUS);
+    printf("|  Уровень %x	Время 	%x   Статус ->",	ram->my_level, ram->my_time); PrintStatus(ram->Status);
     printf("|  Сессия  %x	Сеанс	%x \n",	ram->my_session,ram->my_seance);
     printf("|------------------------------------------------------------------------------------------\n");
     printf("Данные с датчиков\n");
