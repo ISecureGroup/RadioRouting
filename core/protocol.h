@@ -8,10 +8,8 @@
 #define 	LEN_PAYLOAD_MANY 100                                                                                            //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
 #define     MAIN_ROUTER 0
 #define     ALTERNATE_ROUTER 1
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//----------------------ПЕРЕЧИСЛЕНИЯ-----------------------
+//---------------------ПЕРЕЧИСЛЕНИЯ------------------------
 typedef enum {
     ////////////////// СОСТОЯНИЯ ПЕРВОГО ЭТАПА
     SLEEP,                                                                                                                  //СОСТОЯНИЕ ОЖИДАНИЯ КОМАНД НА ПОСТРОЕНИЕ СЕТИ
@@ -32,7 +30,7 @@ typedef enum {
     ROUTER,
     GATEWAY
 } ROLE;                                                                                                    //РОЛЬ УЗЛА - ШЛЮЗ, РОУТЕР, ИЛИ КОНЕЧНЫЙ УЗЕЛ
-//------------------------СТРУКТУРЫ------------------------
+//----------------------СТРУКТУРЫ--------------------------
 typedef struct  Packet {                                                                                                    //РАЗБИТЫЙ ЗАГОЛОВОК ПАКЕТА, ЕГО НАГРУЗКА И НЕКОТОРАЯ СЛУЖЕБНАЯ ИНФОРМАЦИЯ
 
     unsigned char 	_startpacket; 				                                                                            // [1 byte] symbol of start "$"
@@ -93,16 +91,18 @@ typedef struct  WorkTable {
     char            output_payload[100];
     /////////////   КОНЕЦ
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
+//---------------------ИНСТРУМЕНТЫ-------------------------
+unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
 //------------------------МЕТОДЫ---------------------------
 Packet 			ParcerHeader(const unsigned char *stream);						                                            //ПАРСЕР ЗАГОЛОВКА
 void 			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);			            //ОСНОВНОЙ МЕНЕДЖЕР
-unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДОУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
-unsigned char   PacketValidator(WorkTable * ram, Packet pack);                                                              //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
+unsigned char   Validator(WorkTable * ram, Packet pack);                                                                    //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
 int             getCurrentState();                                                                                          //ВЫТЯГИВАЕМ СОСТОЯНИЕ ДЛЯ ФОРМИРОВАНИЯ НЕОБХОДИМОГО ПАКЕТА
 void            packetConstructor(WorkTable *ram, unsigned char   _startpacket, unsigned char	_typepacket, unsigned long	_sourceaddres, unsigned long	_destinationaddres, unsigned short	_synctime, unsigned char	_session, unsigned char	_level, unsigned char	_seance, unsigned char	_nodestate, unsigned char	_ordernumder, unsigned char	_ttl, unsigned long 	_nextaddres, unsigned long 	_prevaddres, unsigned short 	_reserve, unsigned char	*_payload);
+//------------------УПРАВЛЯЮЩАЯ ЛОГИКА---------------------
 int             MAIN_CONTROLLER(WorkTable * ram);                                                                           //УПРАВЛЯЮЩАЯ ЛОГИКА ПРОГРАММЫ
-//------------------------FACTORY---------------------------
+//------------------------FACTORY--------------------------
 void            packet_Factory_00(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void            packet_Factory_01(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void            packet_Factory_02(WorkTable * ram);;                                                                        //ФАБРИКА ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
