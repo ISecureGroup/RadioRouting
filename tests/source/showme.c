@@ -1,13 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../../core/protocol/protocol.h"
+
+void ShowEvent(char *s){
+    printf("\n\n|------------------------------%s--------------------------------\n",s);
+}
 
 void PrintStatus(STATE stt){
     switch (stt) {
         case 0:printf(" СОН\n");break;
-        case 1:printf(" Я УЗЕЛ\n");break;
-        case 2:printf(" ВЫБИРАЮ РОУТЕРЫ\n");break;
-        case 3:printf(" Я ВЫБРАЛ РОУТЕРЫ\n");break;
-        case 4:printf(" ПРИШЛО ПОДТВЕРЖДЕНИЕ\n");break;
+        case 1:printf(" ГОТОВ ОПРЕДЕЛИТЬ РОУТЕР\n");break;
+        case 2:printf(" ОЖИДАЮ СОСЕДЕЙ\n");break;
+        case 3:printf(" РОУТЕРЫ ОПРЕДЕЛЕНЫ\n");break;
+        case 4:printf(" ЖДЕМ ПОДТВЕРЖДЕНИЯ\n");break;
         case 5:printf(" НЕ ПРИШЛО ПОДТВЕРЖДЕНИЕ\n");break;
         case 6:printf(" Я НАШЕЛ СВОЙ АДРЕСС ПРИ ОПРОСЕ \n");break;
         case 7:printf(" МОЙ ПАКЕТ UNO УСПЕШНО ДОСТАВЛЕН \n");break;
@@ -55,6 +60,7 @@ void ShowRAMTable(WorkTable *ram){
     printf("|------------------------------------------------------------------------------------------\n");
 }
 void PrintPacket(Packet exmpl){
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     printf("\n\n\n|-----------------------------------Входящий пакет-----------------------------------------\n");
     printf("|  Стартовый байт| %x \t|	Адрес узла отправителя	| ",exmpl._startpacket);		PrintAddress(exmpl._sourceaddres);
     printf("|  Тип пакета    | %x \t|	Адрес узла получателя	| ",exmpl._typepacket);			PrintAddress(exmpl._destinationaddres);

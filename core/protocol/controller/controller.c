@@ -1,7 +1,7 @@
 #include "../protocol.h"
 
-void SetStatus(STATE Stt) {
-
+void SetStatus(WorkTable *ram,STATE Stt) {
+    ram->Status = Stt;
 }
 void CheckSession(WorkTable *ram) {
 
@@ -12,8 +12,7 @@ int MAIN_CONTROLLER(WorkTable * ram){
 
     switch (ram->Status) {
         case SLEEP:
-            SetStatus(READY_DEFINE_ROUTER);
-            SetDefault();
+            SetStatus(ram,READY_DEFINE_ROUTER);
             break;
         case READY_DEFINE_ROUTER:                                                                                              break;
         case WAITING_NEIGHBORS:                                                                                                break;

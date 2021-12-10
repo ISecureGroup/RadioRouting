@@ -1,3 +1,4 @@
+#include <vcruntime_string.h>
 #include "protocol.h"
 #include "../../tests/showme.h"
 #include "controller/controller.h"
@@ -9,8 +10,9 @@ unsigned long GetAddress(const unsigned char *stream, int startbyte){
     return ((((((((buf + stream[startbyte])<<8) + stream[startbyte+1])<<8)+ stream[startbyte+2])<<8)+ stream[startbyte+3]));
 }
 ////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
-int           SetDefault(){
-
+int           SetDefault(WorkTable *ram){
+    ShowEvent("ВАЛИДАТОР ЗАПУСТИЛ ПРОЦЕСС СБРОСА УСТРОЙСТВА");
+    memset(&ram,0,sizeof (ram));
 }
 Packet        ParcerHeader(const unsigned char *stream){
 
@@ -53,9 +55,12 @@ void          ServiceFieldAdding(WorkTable *ram,Packet pack){
 }
 unsigned char VALIDATOR(WorkTable * ram, Packet pack){
 
+    if(pack._session != ram->my_session )
+        SetDefault(ram);
+
     switch(pack._typepacket)
     {
-        case 0x00:	if(ram->Status == SLEEP || pack._session != ram->my_session)    {  return pack._typepacket; }   else { return 0x99; }
+        case 0x00:	if(ram->Status == SLEEP)                                        {  return pack._typepacket; }   else { return 0x99; }
         case 0x01:	if(ram->Status == WAITING_NEIGHBORS)                            {  return pack._typepacket; }   else { return 0x99; }
         case 0x02:	if(ram->Status == WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES)   {  return pack._typepacket; }	else { return 0x99; }
         case 0x03:	if(ram->Status == CONFIRM_FROM_POTENTIAL_ROUTER)                {  return pack._typepacket; }	else { return 0x99; }
@@ -95,6 +100,7 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
 
     Packet buffer = ParcerHeader(stream);
     PrintPacket(buffer);
+    ShowRAMTable(ram);
     //------------Обработчики-----------------
     switch(VALIDATOR(ram, buffer))
     {
@@ -105,10 +111,11 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
         case 0x04:	pl_Handler_04(ram, buffer);	break;
         case 0x05:	pl_Handler_05(ram, buffer);	break;
         case 0x06:	pl_Handler_06(ram, buffer);	break;
-        case 0x99:  break;
+        case 0x99:  ShowEvent("ВАЛИДАТОР ОТБРОСИЛ ПАКЕТ");
     }
     //---------Управляющая логика-------------
     MAIN_CONTROLLER(ram);
+    ShowEvent("ПОСЛЕ КОНТРОЛЛЕРА");
     //--------------Фабрика-------------------
     switch(getCurrentState())
     {
