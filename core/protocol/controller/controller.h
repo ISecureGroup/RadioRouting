@@ -6,7 +6,7 @@
 #define RADIOROUTING_CONTROLLER_H
 
 int    MAIN_CONTROLLER(WorkTable * ram);                                                                           //УПРАВЛЯЮЩАЯ ЛОГИКА ПРОГРАММЫ
-void   SetStatus(STATE Stt);
+void   SetStatus(WorkTable *ram,STATE Stt);
 void   CheckSession(WorkTable *ram);
 
 #endif //RADIOROUTING_CONTROLLER_H
