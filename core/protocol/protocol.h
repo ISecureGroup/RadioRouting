@@ -5,7 +5,7 @@
 #define 	MAX_SUB_ROUTERS 10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
 #define 	MAX_END_DEVICES 10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
 #define 	HEADER_LEN 28                                                                                                   //ДЛИННА ЗАГОЛОВКА ПАКЕТА
-#define 	LEN_PAYLOAD_MANY 100                                                                                            //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
+#define 	LEN_PAYLOAD 100                                                                                            //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
 #define     MAIN_ROUTER 0
 #define     ALTERNATE_ROUTER 1
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,8 +13,7 @@
 typedef enum {
     //////////////////ПЕРВЫЙ ЭТАП
     SLEEP,                                                                                                                  //СОСТОЯНИЕ ОЖИДАНИЯ КОМАНД НА ПОСТРОЕНИЕ СЕТИ (ОЖИДАНИЕ ПАКЕТА 00)
-    READY_DEFINE_ROUTER,                                                                                                    //УСТРОЙСТВО ПРОБУДИЛОСЬ (ОТПРАВЛЯЕТ ПАКЕТ 01)
-    WAITING_NEIGHBORS,                                                                                                      //ОЖИДАЕТ ПАКЕТЫ ОТ СОСЕДЕЙ, ФОРМИРУЕТ ТАБЛИЦУ И ВЫБИРАЕТ СВОИ РОДИТЕЛЬСКИЕ РОУТЕРЫ
+    START_DEFINING_ROUTERS,                                                                                                 //ОЖИДАЕТ ПАКЕТЫ ОТ СОСЕДЕЙ, ФОРМИРУЕТ ТАБЛИЦУ И ВЫБИРАЕТ СВОИ РОДИТЕЛЬСКИЕ РОУТЕРЫ
     ROUTER_IS_DEFINED,                                                                                                      //СОХРАНЯЕТ АДРЕС УСТРОЙСТВА В СПРИСОК УСТРОЙСТВ ОТ КОТОРЫХ ОЖИДАЕТСЯ ПОДТВЕРЖДЕНИЕ
     CONFIRM_FROM_POTENTIAL_ROUTER,                                                                                          //ОЖИДАНИЕ ПОЛУЧЕНИЯ ПОДТВЕРЖДЕНИЯ
     ////////////////// ВТОРОЙ ЭТАП
@@ -55,7 +54,7 @@ typedef struct  Packet {                                                        
     unsigned long 	_prevaddres;				                                                                            // [4 byte] address of previous node
 
     unsigned short 	_reserve;					                                                                            // [2 byte] RESERVE
-    unsigned char	_payload[100];				                                                                            // [100 byte] Payload. End of payload must be sym. #
+    unsigned char	_payload[LEN_PAYLOAD];				                                                                            // [100 byte] Payload. End of payload must be sym. #
     unsigned int    _plen;                                                                                                  // [4 byte] len
 
 
@@ -69,7 +68,7 @@ typedef struct  RouteUnit {
 typedef struct  WorkTable {
 
     /////////////   ДАННЫЕ С ДАТЧИКОВ (ПРИЛОЖЕНИЯ)
-    unsigned char   many_payload[LEN_PAYLOAD_MANY];
+    unsigned char   many_payload[LEN_PAYLOAD];
     unsigned int    len_of_list;
     /////////////   ТАБЛИЦА ПОСТРОЕНИЯ СЕТИ
     RouteUnit	 	pRouterlist[MAX_POTENTIAL_ROUTER];
@@ -92,7 +91,7 @@ typedef struct  WorkTable {
     unsigned long	i_reserve_router_from[MAX_SUB_ROUTERS];
     unsigned long	my_end_devices[MAX_END_DEVICES];
     Packet          output_packet;
-    char            output_payload[100];
+    char            output_payload[LEN_PAYLOAD];
     /////////////   КОНЕЦ
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
 //---------------------ИНСТРУМЕНТЫ-------------------------

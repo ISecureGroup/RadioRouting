@@ -19,6 +19,7 @@ void loop(){
     switch(getchar()) {
         case'0': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_0);    break;
         case'1': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);    break;
+        case'a': PacketManager(SensorData_0, RSSI, &RAM, PacketType1);      break;
         case'2': PacketManager(SensorData_0, RSSI, &RAM, PacketType2_0);    break;
         case'3': PacketManager(SensorData_0, RSSI, &RAM, PacketType3);      break;
         case'4': PacketManager(SensorData_0, RSSI, &RAM, PacketType4);      break;

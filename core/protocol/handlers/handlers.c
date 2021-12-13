@@ -75,7 +75,7 @@ void pl_Handler_04(WorkTable * ram, Packet pack){
     ServiceFieldAdding(ram,pack);
 }
 void pl_Handler_05(WorkTable * ram, Packet pack){
-    for(int iter = 0; iter < LEN_PAYLOAD_MANY; iter++){
+    for(int iter = 0; iter < LEN_PAYLOAD; iter++){
         if(iter == ram->len_of_list){
             for(int i = 0; i < pack._plen + 1; i++)
                 ram->many_payload[iter+i] = pack._payload[i];

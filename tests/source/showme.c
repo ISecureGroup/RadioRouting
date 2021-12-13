@@ -3,20 +3,19 @@
 #include "../../core/protocol/protocol.h"
 
 void ShowEvent(char *s){
-    printf("\n\n|------------------------------%s--------------------------------\n",s);
+    printf("\n\n|---------------------------------%s---------------------------------\n",s);
 }
 
 void PrintStatus(STATE stt){
     switch (stt) {
         case 0:printf(" СОН\n");break;
-        case 1:printf(" ГОТОВ ОПРЕДЕЛИТЬ РОУТЕР\n");break;
-        case 2:printf(" ОЖИДАЮ СОСЕДЕЙ\n");break;
-        case 3:printf(" РОУТЕРЫ ОПРЕДЕЛЕНЫ\n");break;
-        case 4:printf(" ЖДЕМ ПОДТВЕРЖДЕНИЯ\n");break;
-        case 5:printf(" НЕ ПРИШЛО ПОДТВЕРЖДЕНИЕ\n");break;
-        case 6:printf(" Я НАШЕЛ СВОЙ АДРЕСС ПРИ ОПРОСЕ \n");break;
-        case 7:printf(" МОЙ ПАКЕТ UNO УСПЕШНО ДОСТАВЛЕН \n");break;
-        case 8:printf(" ПРИШЕЛ ПАКЕТ НА РЕТРАНСЛЯЦИЮ \n");break;
+        case 1:printf(" ОПРЕДЕЛЯЮ РОУТЕРЫ\n");break;
+        case 2:printf(" РОУТЕРЫ ОПРЕДЕЛЕНЫ\n");break;
+        case 3:printf(" ЖДЕМ ПОДТВЕРЖДЕНИЯ\n");break;
+        case 4:printf(" НЕ ПРИШЛО ПОДТВЕРЖДЕНИЕ\n");break;
+        case 5:printf(" Я НАШЕЛ СВОЙ АДРЕСС ПРИ ОПРОСЕ \n");break;
+        case 6:printf(" МОЙ ПАКЕТ UNO УСПЕШНО ДОСТАВЛЕН \n");break;
+        case 7:printf(" ПРИШЕЛ ПАКЕТ НА РЕТРАНСЛЯЦИЮ \n");break;
     }
 }
 void PrintAddress(unsigned long address){

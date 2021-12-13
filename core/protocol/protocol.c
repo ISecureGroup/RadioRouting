@@ -12,16 +12,53 @@ unsigned long GetAddress(const unsigned char *stream, int startbyte){
 ////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
 int           SetDefault(WorkTable *ram){
     ShowEvent("ВАЛИДАТОР ЗАПУСТИЛ ПРОЦЕСС СБРОСА УСТРОЙСТВА");
-    memset(&ram,0,sizeof (ram));
+    for(int i=0; i < LEN_PAYLOAD; i++)
+        ram->many_payload[i] = 0;
+    for(int i=0;i<MAX_SUB_ROUTERS;i++)
+        ram->i_reserve_router_from[i] = 0;
+    for(int i=0;i<MAX_END_DEVICES;i++)
+        ram->my_end_devices[i] = 0;
+    for(int i=0;i<MAX_POTENTIAL_ROUTER;i++) {
+        ram->pRouterlist[i].address = 0;
+        ram->pRouterlist[i].device_counter = 0;
+    }
+    for(int i=0;i<MAX_SUB_ROUTERS;i++)
+        ram->my_subrouters[i] = 0;
+    ram->my_routers[0]=0;
+    ram->my_routers[1]=0;
+
+    ram->Device = 0;
+    ram->Status = 0;
+    ram->len_of_list = 0;
+    ram->my_role = 0;
+    ram->my_level = 0;
+    ram->my_time = 0;
+    ram->my_seance = 0;
+    ram->packet_order = 0;
+    ram->gateway = 0;
+    ram->temporary_prev_address = 0;
+
+    ShowEvent("ПАМЯТЬ ОЧИЩЕНА");
+    ShowRAMTable(ram);
+
+
+
+
+
 }
 Packet        ParcerHeader(const unsigned char *stream){
 
-    Packet 				buffer;								//  Temporary storage of parcer packet
+    Packet 				buffer;							//  Temporary storage of parcer packet
     int					len = 0;						//  Parsing...
     unsigned long		adr_buff = 0;
 
     while(stream[len]!='#')
         len++;
+    if(len<HEADER_LEN ||len>LEN_PAYLOAD + HEADER_LEN){
+        buffer._typepacket = 0x99;
+        return buffer;
+    }
+
 
     buffer._plen                = len - HEADER_LEN-1;
     buffer._startpacket 		= stream[0];
@@ -61,12 +98,13 @@ unsigned char VALIDATOR(WorkTable * ram, Packet pack){
     switch(pack._typepacket)
     {
         case 0x00:	if(ram->Status == SLEEP)                                        {  return pack._typepacket; }   else { return 0x99; }
-        case 0x01:	if(ram->Status == WAITING_NEIGHBORS)                            {  return pack._typepacket; }   else { return 0x99; }
+        case 0x01:	if(ram->Status == START_DEFINING_ROUTERS)                       {  return pack._typepacket; }   else { return 0x99; }
         case 0x02:	if(ram->Status == WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES)   {  return pack._typepacket; }	else { return 0x99; }
         case 0x03:	if(ram->Status == CONFIRM_FROM_POTENTIAL_ROUTER)                {  return pack._typepacket; }	else { return 0x99; }
         case 0x04:	if(ram->Status == READY)                                        {  return pack._typepacket; }	else { return 0x99; }
         case 0x05:	if(ram->Status == RETRANSLATE)                                  {  return pack._typepacket; }	else { return 0x99; }
         case 0x06:	if(ram->Status == RETRANSLATE)                                  {  return pack._typepacket; }	else { return 0x99; }
+        case 0x99:  return 0x99;
     }
     return pack._typepacket;
 }
@@ -99,8 +137,6 @@ void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsign
 void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream){
 
     Packet buffer = ParcerHeader(stream);
-    PrintPacket(buffer);
-    ShowRAMTable(ram);
     //------------Обработчики-----------------
     switch(VALIDATOR(ram, buffer))
     {
@@ -127,7 +163,6 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
         case 5:	packet_Factory_05(ram);	break;
         case 6:	packet_Factory_06(ram);	break;
     }
-
     ShowRAMTable(ram);
 
 }

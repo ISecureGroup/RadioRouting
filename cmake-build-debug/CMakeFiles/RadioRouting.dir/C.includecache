@@ -6,27 +6,17 @@
 
 #IncludeRegexTransform: 
 
-M:/RadioRouting/core/protocol/controller/controller.h
-
-M:/RadioRouting/core/protocol/factorys/factorys.h
-
-M:/RadioRouting/core/protocol/handlers/handlers.h
-
-M:/RadioRouting/core/protocol/protocol.c
-vcruntime_string.h
+M:/RadioRouting/core/main.c
+stdlib.h
 -
-protocol.h
+stdio.h
+-
+protocol/protocol.h
 M:/RadioRouting/core/protocol/protocol.h
-../../tests/showme.h
-M:/RadioRouting/tests/showme.h
-controller/controller.h
-M:/RadioRouting/core/protocol/controller/controller.h
-handlers/handlers.h
-M:/RadioRouting/core/protocol/handlers/handlers.h
-factorys/factorys.h
-M:/RadioRouting/core/protocol/factorys/factorys.h
+../tests/paxample.h
+M:/RadioRouting/tests/paxample.h
 
 M:/RadioRouting/core/protocol/protocol.h
 
-M:/RadioRouting/tests/showme.h
+M:/RadioRouting/tests/paxample.h
 
