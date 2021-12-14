@@ -9,26 +9,14 @@
 M:/RadioRouting/core/main.c
 stdlib.h
 -
-protocol.h
-M:/RadioRouting/core/protocol.h
+stdio.h
+-
+protocol/protocol.h
+M:/RadioRouting/core/protocol/protocol.h
 ../tests/paxample.h
 M:/RadioRouting/tests/paxample.h
 
-M:/RadioRouting/core/protocol.c
-protocol.h
-M:/RadioRouting/core/protocol.h
-../tests/showme.h
-M:/RadioRouting/tests/showme.h
-
-M:/RadioRouting/core/protocol.h
+M:/RadioRouting/core/protocol/protocol.h
 
 M:/RadioRouting/tests/paxample.h
-
-M:/RadioRouting/tests/showme.h
-
-M:/RadioRouting/tests/source/showme.c
-stdio.h
--
-../../core/protocol.h
-M:/RadioRouting/core/protocol.h
 
