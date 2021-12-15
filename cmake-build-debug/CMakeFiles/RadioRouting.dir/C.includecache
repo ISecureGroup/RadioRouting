@@ -41,8 +41,6 @@ M:/RadioRouting/core/protocol/protocol.h
 M:/RadioRouting/core/protocol/handlers/handlers.h
 
 M:/RadioRouting/core/protocol/protocol.c
-vcruntime_string.h
--
 protocol.h
 M:/RadioRouting/core/protocol/protocol.h
 ../../tests/showme.h
