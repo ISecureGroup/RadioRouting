@@ -103,7 +103,7 @@ typedef struct  WorkTable {
     Packet          output_packet;
     char            output_payload[LEN_PAYLOAD];
     /////////////   ВРЕМЯ
-    unsigned int    actual_status_time_duration;
+    unsigned int    delta_time;
     unsigned int    start_status_time;
     //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА

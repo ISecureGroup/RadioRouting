@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
 void pl_Handler_00(WorkTable * ram, Packet pack){
 
-    for(int i = 0;i<MAX_POTENTIAL_ROUTER;i++)
+    for(int i = 0; i<MAX_POTENTIAL_ROUTER; i++)
         if(ram->pRouterlist[i].address == 0 || ram->pRouterlist[i].address == pack._sourceaddres){
             ram->pRouterlist[i].address          = pack._sourceaddres;
             ram->pRouterlist[i].device_counter   = 1;

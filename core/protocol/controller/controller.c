@@ -2,26 +2,25 @@
 #include <stdio.h>
 #include "../protocol.h"
 
-int isTimeout(WorkTable *ram, unsigned int deltatime) {
+int isTimeout(WorkTable *ram, unsigned int delay) {
 
-    if(ram->actual_status_time_duration > deltatime){
-        ram->start_status_time = ram->actual_status_time_duration;
+    if(ram->delta_time > delay){
+        ram->start_status_time = ram->start_status_time + ram->delta_time;
         return 1;
     }
     return 0;
 }
-void CheckSession(WorkTable *ram) {
 
-}
 int MAIN_CONTROLLER(WorkTable * ram){
 
-    ram->actual_status_time_duration = clock()/CLOCKS_PER_SEC - ram->start_status_time;
+    ram->delta_time = clock() / CLOCKS_PER_SEC - ram->start_status_time;
 
     switch (ram->Status) {
         //------------------------------------------------------------
         case SLEEP:
-            if(isTimeout(ram, DELAY_OF_SLEEP))
+            if(isTimeout(ram, DELAY_OF_SLEEP) && ram->pRouterlist[0].address != 0) {
                 ram->Status = START_DEFINING_ROUTERS;
+            }
             break;
         //------------------------------------------------------------
         case START_DEFINING_ROUTERS:
