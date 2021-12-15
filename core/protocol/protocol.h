@@ -1,13 +1,23 @@
 #ifndef     RADIOROUTING_PROTOCOL_H
 #define     RADIOROUTING_PROTOCOL_H
 
-#define 	MAX_POTENTIAL_ROUTER 10                                                                                         //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО РОУТЕРЕРОВ СПОСОБНЫХ ХРАНИТСЯ В ПАМЯТИ ДЛЯ ПОДСЧЕТА
-#define 	MAX_SUB_ROUTERS 10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
-#define 	MAX_END_DEVICES 10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
-#define 	HEADER_LEN 28                                                                                                   //ДЛИННА ЗАГОЛОВКА ПАКЕТА
-#define 	LEN_PAYLOAD 100                                                                                            //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
-#define     MAIN_ROUTER 0
-#define     ALTERNATE_ROUTER 1
+#define 	MAX_POTENTIAL_ROUTER         10                                                                                         //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО РОУТЕРЕРОВ СПОСОБНЫХ ХРАНИТСЯ В ПАМЯТИ ДЛЯ ПОДСЧЕТА
+#define 	MAX_SUB_ROUTERS              10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
+#define 	MAX_END_DEVICES              10                                                                                              //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
+#define 	HEADER_LEN                   28                                                                                                   //ДЛИННА ЗАГОЛОВКА ПАКЕТА
+#define 	LEN_PAYLOAD                  100                                                                                            //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
+#define     MAIN_ROUTER                  0
+#define     ALTERNATE_ROUTER             1
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define     DELAY_OF_SLEEP 10
+#define     DELAY_OF_START_DEFINING_ROUTERS                                 10
+#define     DELAY_OF_ROUTER_IS_DEFINED                                      10
+#define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          10
+#define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   10
+#define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             10
+#define     DELAY_OF_ANNOUNCEMENT_ROUTER_STATUS                             10
+#define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  10
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //---------------------ПЕРЕЧИСЛЕНИЯ------------------------
 typedef enum {
