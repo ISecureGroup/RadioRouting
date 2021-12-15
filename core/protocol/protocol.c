@@ -148,6 +148,7 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
         case 0x05:	pl_Handler_05(ram, buffer);	break;
         case 0x06:	pl_Handler_06(ram, buffer);	break;
         case 0x99:  ShowEvent("ВАЛИДАТОР ОТБРОСИЛ ПАКЕТ");
+        case 0xff:  break;
     }
     //---------Управляющая логика-------------
     MAIN_CONTROLLER(ram);
