@@ -92,7 +92,10 @@ typedef struct  WorkTable {
     unsigned long	my_end_devices[MAX_END_DEVICES];
     Packet          output_packet;
     char            output_payload[LEN_PAYLOAD];
-    /////////////   КОНЕЦ
+    /////////////   ВРЕМЯ
+    unsigned int    actual_status_time_duration;
+    unsigned int    start_status_time;
+    //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
 //---------------------ИНСТРУМЕНТЫ-------------------------
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
