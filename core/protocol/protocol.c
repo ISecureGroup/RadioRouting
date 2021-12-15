@@ -1,4 +1,3 @@
-#include <vcruntime_string.h>
 #include "protocol.h"
 #include "../../tests/showme.h"
 #include "controller/controller.h"
