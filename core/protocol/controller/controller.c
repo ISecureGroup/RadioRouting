@@ -5,9 +5,10 @@
 int isTimeout(WorkTable *ram, unsigned int time) {
 
     if(ram->actual_status_time_duration > time){
-        return 1;
         ram->start_status_time = ram->actual_status_time_duration;
+        return 1;
     }
+    return 0;
 }
 void CheckSession(WorkTable *ram) {
 
