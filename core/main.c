@@ -17,18 +17,14 @@ void start(){
 /////////////////////ОСНОВНОЙ ЦИКЛ МИКРОКОНТРОЛЛЕРА
 void loop(){
     //Осн.Менеджер(Данные с датчиков, Адрес основной памяти, пакет)
+
     switch(getchar()) {
         case'0': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);    break;
         case'1': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_2);    break;
-        case'a': PacketManager(SensorData_0, RSSI, &RAM, PacketType1_1);    break;
-        case'2': PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);    break;
-        case'3': PacketManager(SensorData_0, RSSI, &RAM, PacketType3_1);    break;
-        case'4': PacketManager(SensorData_0, RSSI, &RAM, PacketType4_1);    break;
-        case'5': PacketManager(SensorData_0, RSSI, &RAM, PacketType5_1);    break;
-        case'6': PacketManager(SensorData_0, RSSI, &RAM, PacketType6_1);    break;
-        case'#': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1);    break;
-        case'c': PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);    break;
-        case'e': PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);    break;
+        case'2': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_3);    break;
+        case'3': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_4);    break;
+        case'e': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_E);    break;
+        case'f': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_E1);   break;
 
 
     }

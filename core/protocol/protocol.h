@@ -9,7 +9,7 @@
 #define     MAIN_ROUTER                  0
 #define     ALTERNATE_ROUTER             1
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define     DELAY_OF_SLEEP 10
+#define     DELAY_OF_SLEEP                                                  30
 #define     DELAY_OF_START_DEFINING_ROUTERS                                 10
 #define     DELAY_OF_ROUTER_IS_DEFINED                                      10
 #define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          10
