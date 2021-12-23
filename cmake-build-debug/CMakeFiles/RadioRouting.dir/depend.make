@@ -4,6 +4,7 @@
 CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\core\main.c
 CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\core\protocol\protocol.h
 CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\tests\paxample.h
+CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\tests\showme.h
 
 CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: ..\core\protocol\controller\controller.c
 CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: ..\core\protocol\protocol.h

@@ -1,12 +1,13 @@
 #include "../protocol.h"
 
 ////////////////////////////////////////////////HANDLERS///////////////////////////////////////////////////////
-void pl_Handler_00(WorkTable * ram, Packet pack){
+void pl_Handler_00(WorkTable * ram, Packet pack, int RSSI){
 
     for(int i = 0; i<MAX_POTENTIAL_ROUTER; i++)
         if(ram->pRouterlist[i].address == 0 || ram->pRouterlist[i].address == pack._sourceaddres){
             ram->pRouterlist[i].address          = pack._sourceaddres;
             ram->pRouterlist[i].device_counter   = 1;
+            ram->pRouterlist[i].rssi             = RSSI;
             ServiceFieldAdding(ram,pack);
             break;
         }

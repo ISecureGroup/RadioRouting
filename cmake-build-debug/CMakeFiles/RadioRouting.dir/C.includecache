@@ -17,8 +17,12 @@ protocol/protocol.h
 M:/RadioRouting/core/protocol/protocol.h
 ../tests/paxample.h
 M:/RadioRouting/tests/paxample.h
+../tests/showme.h
+M:/RadioRouting/tests/showme.h
 
 M:/RadioRouting/core/protocol/protocol.h
 
 M:/RadioRouting/tests/paxample.h
+
+M:/RadioRouting/tests/showme.h
 

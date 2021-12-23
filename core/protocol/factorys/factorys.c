@@ -22,24 +22,58 @@ void packet_Factory_00(WorkTable * ram){
                       ram->output_payload);       //ПОЛЕЗНАЯ НАГРУЗКА
 }
 void packet_Factory_01(WorkTable * ram){
+
+    char buff[4];
+    int j = 0,k = 0;
+    for(int i=0;i<LEN_PAYLOAD; i++)
+        ram->output_payload[i] = 0;
+
+    for(int i=0;i<MAX_POTENTIAL_ROUTER; i++){
+        GetAddressChar(&buff, ram->pRouterlist[i].address);
+        if(ram->pRouterlist[i].address == 0) {
+            ram->output_payload[k] = '#';
+            break;
+        }
+        for(int j=0;j<4;j++) {
+            ram->output_payload[k] = buff[j];
+            k++;
+        }
+    }
     packetConstructor(ram,
-                      '$',              //$
-                      0x01,             //ТИП ПАКЕТА
-                      ram->MAC,                   //АДРЕС ОТПРАВИТЕЛЯ
-                      0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,               //ВРЕМЯ
-                      ram->my_level,              //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      0x00,                //СЕАНС
-                      0x00,              //РОЛЬ МОДУЛЯ
-                      ram->packet_order,          //НОМЕР ПАКЕТА
-                      0x01,                   //TTL
-                      0x55555555,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,             //РЕЗЕРВ
-                      ram->output_payload);      //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                  //$
+                      0x01,                 //ТИП ПАКЕТА
+                      ram->MAC,             //АДРЕС ОТПРАВИТЕЛЯ
+                      0x00000000,           //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,         //ВРЕМЯ
+                      ram->my_level,        //УРОВЕНЬ
+                      ram->my_session,      //СЕССИЯ
+                      0x00,                 //СЕАНС
+                      0x00,                 //РОЛЬ МОДУЛЯ
+                      ram->packet_order,    //НОМЕР ПАКЕТА
+                      0x01,                 //TTL
+                      0x55555555,           //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,           //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,               //РЕЗЕРВ
+                      ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 }
 void packet_Factory_02(WorkTable * ram){
+
+    char buff[4];
+    int j = 0,k = 0;
+    for(int i=0;i<LEN_PAYLOAD; i++)
+        ram->output_payload[i] = 0;
+
+    for(int i=0;i<2; i++){
+        GetAddressChar(&buff, ram->my_routers[i]);
+        for(int j=0;j<4;j++) {
+            ram->output_payload[k] = buff[j];
+            k++;
+        }
+        if(i == 1) {
+            ram->output_payload[k] = '#';
+            break;
+        }
+    }
     packetConstructor(ram,
                       '$',              //$
                       0x02,             //ТИП ПАКЕТА

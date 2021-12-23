@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "../protocol.h"
 
+
+
 int isTimeout(WorkTable *ram, unsigned int delay) {
 
     if(ram->delta_time > delay){
@@ -10,7 +12,31 @@ int isTimeout(WorkTable *ram, unsigned int delay) {
     }
     return 0;
 }
+void DefiningRouters(WorkTable *ram) {
 
+        RouteUnit buffer;
+        for (int i = 0; i < MAX_POTENTIAL_ROUTER-1; i++)
+        {
+            for (int j = MAX_POTENTIAL_ROUTER-1; j > i; j--) {
+                if (ram->pRouterlist[j].device_counter > ram->pRouterlist[j-1].device_counter) {
+                    buffer = ram->pRouterlist[j - 1];
+                    ram->pRouterlist[j - 1] = ram->pRouterlist[j];
+                    ram->pRouterlist[j] = buffer;
+                }
+                if(ram->pRouterlist[j].device_counter == ram->pRouterlist[j-1].device_counter){
+                    if(ram->pRouterlist[j].rssi > ram->pRouterlist[j-1].rssi) {
+                        buffer = ram->pRouterlist[j - 1];
+                        ram->pRouterlist[j - 1] = ram->pRouterlist[j];
+                        ram->pRouterlist[j] = buffer;
+                    }
+
+                }
+            }
+        }
+        ram->my_routers[0] = ram->pRouterlist[0].address;
+        ram->my_routers[1] = ram->pRouterlist[1].address;
+
+}
 int MAIN_CONTROLLER(WorkTable * ram){
 
     ram->delta_time = clock() / CLOCKS_PER_SEC - ram->start_status_time;
@@ -19,13 +45,21 @@ int MAIN_CONTROLLER(WorkTable * ram){
         //------------------------------------------------------------
         case SLEEP:
             if(isTimeout(ram, DELAY_OF_SLEEP) && ram->pRouterlist[0].address != 0) {
-                ram->Status = START_DEFINING_ROUTERS;
+                ram->Status = SEND_01;
             }
             break;
         //------------------------------------------------------------
+        case SEND_01:
+            break;
+        //------------------------------------------------------------
         case START_DEFINING_ROUTERS:
-            if(isTimeout(ram, DELAY_OF_START_DEFINING_ROUTERS))
-                ram->Status = ROUTER_IS_DEFINED;
+            if(isTimeout(ram, DELAY_OF_START_DEFINING_ROUTERS)) {
+                DefiningRouters(ram);
+                ram->Status = SEND_02;
+            }
+            break;
+        //------------------------------------------------------------
+        case SEND_02:
             break;
         //------------------------------------------------------------
         case ROUTER_IS_DEFINED:
@@ -63,4 +97,6 @@ int MAIN_CONTROLLER(WorkTable * ram){
         case MY_UNO_IS_PACKED:                                                                                                 break;
     }
 }
+
+
 

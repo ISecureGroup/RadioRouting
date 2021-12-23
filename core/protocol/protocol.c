@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "protocol.h"
 #include "../../tests/showme.h"
 #include "controller/controller.h"
@@ -7,6 +8,13 @@
 unsigned long GetAddress(const unsigned char *stream, int startbyte){
     unsigned long buf = 0;
     return ((((((((buf + stream[startbyte])<<8) + stream[startbyte+1])<<8)+ stream[startbyte+2])<<8)+ stream[startbyte+3]));
+}
+void GetAddressChar(char* buff, unsigned long stream){
+
+    buff[0] = stream>>24;
+    buff[1] = (stream>>16) & 255;
+    buff[2] = (stream>>9) & 255;
+    buff[3] = (stream) & 255;
 }
 ////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
 int           SetDefault(WorkTable *ram){
@@ -91,8 +99,13 @@ void          ServiceFieldAdding(WorkTable *ram,Packet pack){
 }
 unsigned char VALIDATOR(WorkTable * ram, Packet pack){
 
-    if(pack._session != ram->my_session )
-        SetDefault(ram);
+    if(pack._startpacket != '$')
+        return 0x99;
+    if(pack._session != ram->my_session)
+        if(pack._typepacket == 0x00)
+            SetDefault(ram);
+        else
+            return 0x99;
 
     switch(pack._typepacket)
     {
@@ -107,11 +120,11 @@ unsigned char VALIDATOR(WorkTable * ram, Packet pack){
     }
     return pack._typepacket;
 }
-int           getCurrentState(){
-
-}
 void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,unsigned char *_payload)
 {
+    for(int i=0;i<LEN_PAYLOAD; i++)
+        ram->output_packet._payload[i] = 0;
+
     ram->output_packet._startpacket         = _startpacket;
     ram->output_packet._typepacket          = _typepacket;
     ram->output_packet._sourceaddres        = _sourceaddres;
@@ -129,41 +142,46 @@ void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsign
     for(int i=0;i<100;i++)
         if(_payload[i]!='#')
             ram->output_packet._payload[i]      = _payload[i];
-        else
+        else {
+            ram->output_packet._payload[i] = '#';
             break;
+        }
 }
 ////////////////////////////////////////////////MANAGER////////////////////////////////////////////////////////
 void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream){
 
+
     Packet buffer = ParcerHeader(stream);
+    PrintPacketLine(buffer);
     //------------Обработчики-----------------
     switch(VALIDATOR(ram, buffer))
     {
-        case 0x00:	pl_Handler_00(ram, buffer);	break;
-        case 0x01:	pl_Handler_01(ram, buffer);	break;
-        case 0x02:	pl_Handler_02(ram, buffer);	break;
-        case 0x03:	pl_Handler_03(ram, buffer);	break;
-        case 0x04:	pl_Handler_04(ram, buffer);	break;
-        case 0x05:	pl_Handler_05(ram, buffer);	break;
-        case 0x06:	pl_Handler_06(ram, buffer);	break;
-        case 0x99:  ShowEvent("ВАЛИДАТОР ОТБРОСИЛ ПАКЕТ");
+        case 0x00:	pl_Handler_00(ram, buffer, RSSI);	    break;
+        case 0x01:	pl_Handler_01(ram, buffer);	            break;
+        case 0x02:	pl_Handler_02(ram, buffer);	            break;
+        case 0x03:	pl_Handler_03(ram, buffer);	            break;
+        case 0x04:	pl_Handler_04(ram, buffer);	            break;
+        case 0x05:	pl_Handler_05(ram, buffer);	            break;
+        case 0x06:	pl_Handler_06(ram, buffer);	            break;
+        case 0x99:  ShowEvent("ВАЛИДАТОР ОТБРОСИЛ ПАКЕТ");  break;
         case 0xff:  break;
     }
+
     //---------Управляющая логика-------------
     MAIN_CONTROLLER(ram);
-    ShowEvent("ПОСЛЕ КОНТРОЛЛЕРА");
     //--------------Фабрика-------------------
-    switch(getCurrentState())
+    switch(ram->Status)
     {
-        case 0:	packet_Factory_00(ram);	break;
-        case 1:	packet_Factory_01(ram);	break;
-        case 2:	packet_Factory_02(ram);	break;
-        case 3:	packet_Factory_03(ram);	break;
-        case 4:	packet_Factory_04(ram);	break;
-        case 5:	packet_Factory_05(ram);	break;
-        case 6:	packet_Factory_06(ram);	break;
+        case 0:	        packet_Factory_00(ram);	                                                                                                     break;
+        case SEND_01:	packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;  printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = ROUTER_IS_DEFINED;       printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
+        case 4:	        packet_Factory_03(ram);                                     	                                                             break;
+        case 5:	        packet_Factory_04(ram);	                                                                                                     break;
+        case 6:	        packet_Factory_05(ram);	                                                                                                     break;
+        case 7:	        packet_Factory_06(ram);	                                                                                                     break;
     }
-    ShowRAMTable(ram);
+    //ShowRAMTable(ram);
+
 
 }
 

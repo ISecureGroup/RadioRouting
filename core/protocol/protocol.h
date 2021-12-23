@@ -9,8 +9,8 @@
 #define     MAIN_ROUTER                  0
 #define     ALTERNATE_ROUTER             1
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define     DELAY_OF_SLEEP                                                  30
-#define     DELAY_OF_START_DEFINING_ROUTERS                                 10
+#define     DELAY_OF_SLEEP                                                  15
+#define     DELAY_OF_START_DEFINING_ROUTERS                                 15
 #define     DELAY_OF_ROUTER_IS_DEFINED                                      10
 #define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          10
 #define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   10
@@ -23,7 +23,9 @@
 typedef enum {
     //////////////////ПЕРВЫЙ ЭТАП
     SLEEP,                                                                                                                  //СОСТОЯНИЕ ОЖИДАНИЯ КОМАНД НА ПОСТРОЕНИЕ СЕТИ (ОЖИДАНИЕ ПАКЕТА 00)
+    SEND_01,
     START_DEFINING_ROUTERS,                                                                                                 //ОЖИДАЕТ ПАКЕТЫ ОТ СОСЕДЕЙ, ФОРМИРУЕТ ТАБЛИЦУ И ВЫБИРАЕТ СВОИ РОДИТЕЛЬСКИЕ РОУТЕРЫ
+    SEND_02,
     ROUTER_IS_DEFINED,                                                                                                      //СОХРАНЯЕТ АДРЕС УСТРОЙСТВА В СПРИСОК УСТРОЙСТВ ОТ КОТОРЫХ ОЖИДАЕТСЯ ПОДТВЕРЖДЕНИЕ
     CONFIRM_FROM_POTENTIAL_ROUTER,                                                                                          //ОЖИДАНИЕ ПОЛУЧЕНИЯ ПОДТВЕРЖДЕНИЯ
     ////////////////// ВТОРОЙ ЭТАП
@@ -73,6 +75,7 @@ typedef struct  RouteUnit {
 
     unsigned long 	            address;
     unsigned int				device_counter;
+    unsigned int                rssi;
 
 } RouteUnit;                                                                                  //СТРУКТУРА ИМИТИРУЮЩАЯ АССОЦИАТИВНЫЙ СПИСОК ХРАНЯЩИЙ АДРЕС УСТРОЙСТВ И КОЛИЧЕСТВО ЕГО ПОВТОРЕНИЙ
 typedef struct  WorkTable {
@@ -109,10 +112,11 @@ typedef struct  WorkTable {
 } WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
 //---------------------ИНСТРУМЕНТЫ-------------------------
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
+void            GetAddressChar(char * buff, unsigned long stream);
 //------------------------МЕТОДЫ---------------------------
 int             SetDefault();
 Packet 			ParcerHeader(const unsigned char *stream);						                                            //ПАРСЕР ЗАГОЛОВКА
-void 			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);			            //ОСНОВНОЙ МЕНЕДЖЕР
+void			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);			            //ОСНОВНОЙ МЕНЕДЖЕР
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДОУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 unsigned char   VALIDATOR(WorkTable * ram, Packet pack);                                                                    //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
 int             getCurrentState();                                                                                          //ВЫТЯГИВАЕМ СОСТОЯНИЕ ДЛЯ ФОРМИРОВАНИЯ НЕОБХОДИМОГО ПАКЕТА
