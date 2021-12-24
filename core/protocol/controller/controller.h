@@ -5,8 +5,7 @@
 #ifndef RADIOROUTING_CONTROLLER_H
 #define RADIOROUTING_CONTROLLER_H
 
-int    MAIN_CONTROLLER(WorkTable * ram);                                                                           //УПРАВЛЯЮЩАЯ ЛОГИКА ПРОГРАММЫ
-void   SetStatus(WorkTable *ram,STATE Stt);
+void   MAIN_CONTROLLER(WorkTable * ram);                                                                           //УПРАВЛЯЮЩАЯ ЛОГИКА ПРОГРАММЫ
 void   DefiningRouters(WorkTable *ram);
 
 #endif //RADIOROUTING_CONTROLLER_H

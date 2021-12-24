@@ -5,7 +5,7 @@
 #ifndef RADIOROUTING_HANDLERS_H
 #define RADIOROUTING_HANDLERS_H
 //------------------------HANDLERS--------------------------
-void 			pl_Handler_00(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void 			pl_Handler_00(WorkTable * ram,Packet pack, int RSSI);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void			pl_Handler_01(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
 void 			pl_Handler_02(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
 void 			pl_Handler_03(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я РОУТЕР"

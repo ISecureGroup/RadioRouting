@@ -80,7 +80,6 @@ void PrintPacket(Packet exmpl){
     }
     printf("\n|--------------------------------Конец полезной нагрузки-----------------------------------");
 }
-
 int PrintPacketLine(Packet exmpl){
     if(exmpl._startpacket != '$')
         return 0;

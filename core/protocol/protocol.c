@@ -4,6 +4,9 @@
 #include "controller/controller.h"
 #include "handlers/handlers.h"
 #include "factorys/factorys.h"
+
+void QUEUE_MANAGER(WorkTable *ram);
+
 ////////////////////////////////////////////////TOOLKIT////////////////////////////////////////////////////////
 unsigned long GetAddress(const unsigned char *stream, int startbyte){
     unsigned long buf = 0;
@@ -11,13 +14,13 @@ unsigned long GetAddress(const unsigned char *stream, int startbyte){
 }
 void GetAddressChar(char* buff, unsigned long stream){
 
-    buff[0] = stream>>24;
-    buff[1] = (stream>>16) & 255;
-    buff[2] = (stream>>9) & 255;
-    buff[3] = (stream) & 255;
+    buff[0] = (char)(stream>>24);
+    buff[1] = (char)((stream>>16) & 255);
+    buff[2] = (char)((stream>>9) & 255);
+    buff[3] = (char)((stream) & 255);
 }
 ////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
-int           SetDefault(WorkTable *ram){
+void           SetDefault(WorkTable *ram){
     ShowEvent("ВАЛИДАТОР ЗАПУСТИЛ ПРОЦЕСС СБРОСА УСТРОЙСТВА");
     for(int i=0; i < LEN_PAYLOAD; i++)
         ram->many_payload[i] = 0;
@@ -47,11 +50,6 @@ int           SetDefault(WorkTable *ram){
 
     ShowEvent("ПАМЯТЬ ОЧИЩЕНА");
     ShowRAMTable(ram);
-
-
-
-
-
 }
 Packet        ParcerHeader(const unsigned char *stream){
 
@@ -84,7 +82,7 @@ Packet        ParcerHeader(const unsigned char *stream){
     buffer._prevaddres			= (((((((adr_buff + stream[22])<<8) + stream[23])<<8) + stream[24])<<8) + stream[25]);	adr_buff = 0;
 
     buffer._synctime			=((adr_buff + stream[10])<<8) + stream[11];	adr_buff = 0;
-    buffer._reserve				=((adr_buff + stream[26])<<8) + stream[27];	adr_buff = 0;
+    buffer._reserve				=((adr_buff + stream[26])<<8) + stream[27];
 
     for(int iter = 28;iter<=len;iter++)
         buffer._payload[iter-28]= stream[iter];
@@ -101,51 +99,24 @@ unsigned char VALIDATOR(WorkTable * ram, Packet pack){
 
     if(pack._startpacket != '$')
         return 0x99;
-    if(pack._session != ram->my_session)
-        if(pack._typepacket == 0x00)
+    if(pack._session != ram->my_session) {
+        if (pack._typepacket == 0x00)
             SetDefault(ram);
-        else
-            return 0x99;
+        else return 0x99;
+    }
 
     switch(pack._typepacket)
     {
         case 0x00:	if(ram->Status == SLEEP)                                        {  return pack._typepacket; }   else { return 0x99; }
         case 0x01:	if(ram->Status == START_DEFINING_ROUTERS)                       {  return pack._typepacket; }   else { return 0x99; }
         case 0x02:	if(ram->Status == WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES)   {  return pack._typepacket; }	else { return 0x99; }
-        case 0x03:	if(ram->Status == CONFIRM_FROM_POTENTIAL_ROUTER)                {  return pack._typepacket; }	else { return 0x99; }
-        case 0x04:	if(ram->Status == READY)                                        {  return pack._typepacket; }	else { return 0x99; }
-        case 0x05:	if(ram->Status == RETRANSLATE)                                  {  return pack._typepacket; }	else { return 0x99; }
-        case 0x06:	if(ram->Status == RETRANSLATE)                                  {  return pack._typepacket; }	else { return 0x99; }
+        case 0x03:	if(ram->Status == WAIT_CONFIRM_FROM_POTENTIAL_ROUTER)           {  return pack._typepacket; }	else { return 0x99; }
+        //...
         case 0x99:  return 0x99;
     }
     return pack._typepacket;
 }
-void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,unsigned char *_payload)
-{
-    for(int i=0;i<LEN_PAYLOAD; i++)
-        ram->output_packet._payload[i] = 0;
-
-    ram->output_packet._startpacket         = _startpacket;
-    ram->output_packet._typepacket          = _typepacket;
-    ram->output_packet._sourceaddres        = _sourceaddres;
-    ram->output_packet._destinationaddres   = _destinationaddres;
-    ram->output_packet._synctime            = _synctime;
-    ram->output_packet._session             = _session;
-    ram->output_packet._level               = _level;
-    ram->output_packet._seance              = _seance;
-    ram->output_packet._nodestate           = _nodestate;
-    ram->output_packet._ordernumder         = _ordernumder;
-    ram->output_packet._ttl                 = _ttl;
-    ram->output_packet._nextaddres          = _nextaddres;
-    ram->output_packet._prevaddres          = _prevaddres;
-    ram->output_packet._reserve             = _reserve;
-    for(int i=0;i<100;i++)
-        if(_payload[i]!='#')
-            ram->output_packet._payload[i]      = _payload[i];
-        else {
-            ram->output_packet._payload[i] = '#';
-            break;
-        }
+void          QUEUE_MANAGER(WorkTable *ram) {
 }
 ////////////////////////////////////////////////MANAGER////////////////////////////////////////////////////////
 void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream){
@@ -166,23 +137,25 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
         case 0x99:  ShowEvent("ВАЛИДАТОР ОТБРОСИЛ ПАКЕТ");  break;
         case 0xff:  break;
     }
-
     //---------Управляющая логика-------------
     MAIN_CONTROLLER(ram);
     //--------------Фабрика-------------------
     switch(ram->Status)
     {
-        case 0:	        packet_Factory_00(ram);	                                                                                                     break;
-        case SEND_01:	packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;  printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
-        case SEND_02:   packet_Factory_02(ram);	ram->Status = ROUTER_IS_DEFINED;       printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
-        case 4:	        packet_Factory_03(ram);                                     	                                                             break;
-        case 5:	        packet_Factory_04(ram);	                                                                                                     break;
-        case 6:	        packet_Factory_05(ram);	                                                                                                     break;
-        case 7:	        packet_Factory_06(ram);	                                                                                                     break;
+        case 0:	        packet_Factory_00(ram);	                                                                                                                 break;
+        case SEND_01:	packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;              printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;  printf("\nИсходящий\n"); PrintPacketLine(ram->output_packet); break;
+        case SEND_03:	packet_Factory_03(ram);                                     	                                                                         break;
+        case 9:	        packet_Factory_04(ram);	                                                                                                                 break;
+        case 10:	    packet_Factory_05(ram);	                                                                                                                 break;
+        case 7:	    packet_Factory_06(ram);	                                                                                                                 break;
     }
-    //ShowRAMTable(ram);
+    //---------Менеджер очередей--------------
+    QUEUE_MANAGER(ram);
 
 
 }
+
+
 
 

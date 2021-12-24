@@ -1,5 +1,4 @@
 #include <time.h>
-#include <stdio.h>
 #include "../protocol.h"
 
 
@@ -37,11 +36,13 @@ void DefiningRouters(WorkTable *ram) {
         ram->my_routers[1] = ram->pRouterlist[1].address;
 
 }
-int MAIN_CONTROLLER(WorkTable * ram){
+void MAIN_CONTROLLER(WorkTable * ram){
 
     ram->delta_time = clock() / CLOCKS_PER_SEC - ram->start_status_time;
 
     switch (ram->Status) {
+        //------------------------------------------------------------
+        case SEND_00: break;
         //------------------------------------------------------------
         case SLEEP:
             if(isTimeout(ram, DELAY_OF_SLEEP) && ram->pRouterlist[0].address != 0) {
@@ -49,8 +50,7 @@ int MAIN_CONTROLLER(WorkTable * ram){
             }
             break;
         //------------------------------------------------------------
-        case SEND_01:
-            break;
+        case SEND_01: break;
         //------------------------------------------------------------
         case START_DEFINING_ROUTERS:
             if(isTimeout(ram, DELAY_OF_START_DEFINING_ROUTERS)) {
@@ -59,19 +59,14 @@ int MAIN_CONTROLLER(WorkTable * ram){
             }
             break;
         //------------------------------------------------------------
-        case SEND_02:
-            break;
+        case SEND_02: break;
         //------------------------------------------------------------
-        case ROUTER_IS_DEFINED:
-            if(isTimeout(ram, DELAY_OF_ROUTER_IS_DEFINED))
-                ram->Status = CONFIRM_FROM_POTENTIAL_ROUTER;
-            break;
-        //------------------------------------------------------------
-        case CONFIRM_FROM_POTENTIAL_ROUTER:
+        case WAIT_CONFIRM_FROM_POTENTIAL_ROUTER:
             if(isTimeout(ram, DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER))
-                ram->Status = ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS;
+                ram->Status = SLEEP;
             break;
-        //------------------------------------------------------------
+
+        //////////////////////////////////////////////////////////////////////////
         case ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS:
             if(isTimeout(ram, DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS))
                 ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;
@@ -79,22 +74,18 @@ int MAIN_CONTROLLER(WorkTable * ram){
         //------------------------------------------------------------
         case WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES:
             if(isTimeout(ram, DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES))
-                ram->Status = ANNOUNCEMENT_ROUTER_STATUS;
+                ram->Status = SEND_03;
             break;
-        //------------------------------------------------------------
-        case ANNOUNCEMENT_ROUTER_STATUS:
-            if(isTimeout(ram, DELAY_OF_ANNOUNCEMENT_ROUTER_STATUS))
-                ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;
-            break;
+            //------------------------------------------------------------
+        case SEND_03: break;
             //------------------------------------------------------------
         case ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES:
             if(isTimeout(ram, DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES))
                 ram->Status = READY;
             break;
             //------------------------------------------------------------
-        case READY:                                                                                                            break;
-        case RETRANSLATE:                                                                                                      break;
-        case MY_UNO_IS_PACKED:                                                                                                 break;
+        case READY: break;
+
     }
 }
 

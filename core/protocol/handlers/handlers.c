@@ -16,7 +16,6 @@ void pl_Handler_01(WorkTable * ram, Packet pack){
 
     unsigned long buffer;
     for(int i = 0;i < pack._plen;i += 4){
-        buffer = 0;
         buffer = GetAddress(pack._payload,i);
         for(int j=0;j<MAX_POTENTIAL_ROUTER;j++){
             if(buffer == ram->pRouterlist[j].address) {
@@ -36,7 +35,6 @@ void pl_Handler_02(WorkTable * ram, Packet pack){
 
     unsigned long 	buffer;
     for(int i=0;i<pack._plen;i+=4){
-        buffer = 0;
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC){
             for(int j=0;j<MAX_SUB_ROUTERS;j++){
@@ -54,24 +52,22 @@ void pl_Handler_02(WorkTable * ram, Packet pack){
     ServiceFieldAdding(ram,pack);
 }
 void pl_Handler_03(WorkTable * ram, Packet pack){
-    unsigned long 	buffer = 0;
+    unsigned long 	buffer;
+    for(int i=0;i<pack._plen;i+=4){
+        buffer = GetAddress(pack._payload,i);
+        if(buffer == ram->MAC){
+            ram->Status = ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS;
+        }
+    }
+    ServiceFieldAdding(ram,pack);
+}
+void pl_Handler_04(WorkTable * ram, Packet pack){
+    unsigned long 	buffer;
     for(int i=0;i<pack._plen;i+=4){
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC){
             ram->Status = READY;
         }
-        buffer = 0;
-    }
-    ServiceFieldAdding(ram,pack);
-}
-void pl_Handler_04(WorkTable * ram, Packet pack){
-    unsigned long 	buffer = 0;
-    for(int i=0;i<pack._plen;i+=4){
-        buffer = GetAddress(pack._payload,i);
-        if(buffer == ram->MAC){
-            ram->Status = RETRANSLATE;
-        }
-        buffer = 0;
     }
     ServiceFieldAdding(ram,pack);
 }
@@ -89,12 +85,12 @@ void pl_Handler_05(WorkTable * ram, Packet pack){
 }
 void pl_Handler_06(WorkTable * ram, Packet pack){
     if(pack._sourceaddres == ram->MAC)
-        ram->Status = RETRANSLATE;
+        ram->Status = READY;
     else{
         for(int i=0;i<pack._plen;i+=20)
             if(GetAddress(pack._payload,i) == ram->MAC)
             {
-                ram->Status = MY_UNO_IS_PACKED;
+                ram->Status = READY;
             }
     }
 }

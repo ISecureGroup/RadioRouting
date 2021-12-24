@@ -1,8 +1,32 @@
-//
-// Created by sb12 on 09.12.2021.
-//
 #include "../protocol.h"
 
+void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload)
+{
+    for(int i=0;i<LEN_PAYLOAD; i++)
+        ram->output_packet._payload[i] = 0;
+
+    ram->output_packet._startpacket         = _startpacket;
+    ram->output_packet._typepacket          = _typepacket;
+    ram->output_packet._sourceaddres        = _sourceaddres;
+    ram->output_packet._destinationaddres   = _destinationaddres;
+    ram->output_packet._synctime            = _synctime;
+    ram->output_packet._session             = _session;
+    ram->output_packet._level               = _level;
+    ram->output_packet._seance              = _seance;
+    ram->output_packet._nodestate           = _nodestate;
+    ram->output_packet._ordernumder         = _ordernumder;
+    ram->output_packet._ttl                 = _ttl;
+    ram->output_packet._nextaddres          = _nextaddres;
+    ram->output_packet._prevaddres          = _prevaddres;
+    ram->output_packet._reserve             = _reserve;
+    for(int i=0;i<100;i++)
+        if(_payload[i]!='#')
+            ram->output_packet._payload[i]      = _payload[i];
+        else {
+            ram->output_packet._payload[i] = '#';
+            break;
+        }
+}
 void packet_Factory_00(WorkTable * ram){
     packetConstructor(ram,
                       '$',              //$
@@ -24,12 +48,12 @@ void packet_Factory_00(WorkTable * ram){
 void packet_Factory_01(WorkTable * ram){
 
     char buff[4];
-    int j = 0,k = 0;
+    int k = 0;
     for(int i=0;i<LEN_PAYLOAD; i++)
         ram->output_payload[i] = 0;
 
     for(int i=0;i<MAX_POTENTIAL_ROUTER; i++){
-        GetAddressChar(&buff, ram->pRouterlist[i].address);
+        GetAddressChar(buff, ram->pRouterlist[i].address);
         if(ram->pRouterlist[i].address == 0) {
             ram->output_payload[k] = '#';
             break;
@@ -59,12 +83,12 @@ void packet_Factory_01(WorkTable * ram){
 void packet_Factory_02(WorkTable * ram){
 
     char buff[4];
-    int j = 0,k = 0;
+    int k = 0;
     for(int i=0;i<LEN_PAYLOAD; i++)
         ram->output_payload[i] = 0;
 
     for(int i=0;i<2; i++){
-        GetAddressChar(&buff, ram->my_routers[i]);
+        GetAddressChar(buff, ram->my_routers[i]);
         for(int j=0;j<4;j++) {
             ram->output_payload[k] = buff[j];
             k++;
