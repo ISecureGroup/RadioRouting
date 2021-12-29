@@ -88,7 +88,7 @@ void packet_Factory_02(WorkTable * ram){
         ram->output_payload[i] = 0;
 
     for(int i=0;i<2; i++){
-        GetAddressChar(buff, ram->my_routers[i]);
+        GetAddressChar(buff, ram->my_routers[i].address);
         for(int j=0;j<4;j++) {
             ram->output_payload[k] = buff[j];
             k++;
@@ -159,7 +159,7 @@ void packet_Factory_05(WorkTable * ram){
                       '$',                                //$
                       0x05,                               //ТИП ПАКЕТА
                       ram->MAC,                                     //АДРЕС ОТПРАВИТЕЛЯ
-                      ram->my_routers[choise],                      //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_routers[choise].address,                      //АДРЕС ПОЛУЧАТЕЛЯ
                       ram->my_time,                                 //ВРЕМЯ
                       ram->my_level,                                //УРОВЕНЬ
                       ram->my_session,                              //СЕССИЯ
@@ -187,7 +187,7 @@ void packet_Factory_06(WorkTable * ram){
                       ram->my_role,                                 //РОЛЬ МОДУЛЯ
                       ram->packet_order,                            //НОМЕР ПАКЕТА
                       0x01,                                     //TTL
-                      ram->my_routers[choise],                      //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      ram->my_routers[choise].address,                      //АДРЕС СЛЕДУЮЩЕГО УЗЛА
                       ram->temporary_prev_address,                  //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
                       0x5555,                               //РЕЗЕРВ
                       ram->output_payload);                        //ПОЛЕЗНАЯ НАГРУЗКА

@@ -5,14 +5,14 @@
 #include "handlers/handlers.h"
 #include "factorys/factorys.h"
 
-void QUEUE_MANAGER(WorkTable *ram);
+
 
 ////////////////////////////////////////////////TOOLKIT////////////////////////////////////////////////////////
 unsigned long GetAddress(const unsigned char *stream, int startbyte){
     unsigned long buf = 0;
     return ((((((((buf + stream[startbyte])<<8) + stream[startbyte+1])<<8)+ stream[startbyte+2])<<8)+ stream[startbyte+3]));
 }
-void GetAddressChar(char* buff, unsigned long stream){
+void          GetAddressChar(char* buff, unsigned long stream){
 
     buff[0] = (char)(stream>>24);
     buff[1] = (char)((stream>>16) & 255);
@@ -20,7 +20,7 @@ void GetAddressChar(char* buff, unsigned long stream){
     buff[3] = (char)((stream) & 255);
 }
 ////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////
-void           SetDefault(WorkTable *ram){
+void          SetDefault(WorkTable *ram){
     ShowEvent("ВАЛИДАТОР ЗАПУСТИЛ ПРОЦЕСС СБРОСА УСТРОЙСТВА");
     for(int i=0; i < LEN_PAYLOAD; i++)
         ram->many_payload[i] = 0;
@@ -118,6 +118,19 @@ unsigned char VALIDATOR(WorkTable * ram, Packet pack){
 }
 void          QUEUE_MANAGER(WorkTable *ram) {
 }
+void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl){
+
+    for(int i = 0;i<4;i++){
+        ram->QUEUE[i].isDelivered      = ram->QUEUE[i+1].isDelivered;
+        ram->QUEUE[i].repeat           = ram->QUEUE[i+1].repeat;
+        ram->QUEUE[i].time_to_send     = ram->QUEUE[i+1].time_to_send;
+        ram->QUEUE[i].q_packet         = ram->QUEUE[i+1].q_packet;
+    }
+    ram->QUEUE[4].isDelivered      = 0;
+    ram->QUEUE[4].repeat        = repeat;
+    ram->QUEUE[4].time_to_send  = time_to_send;
+    ram->QUEUE[4].q_packet      = exmpl;
+}
 ////////////////////////////////////////////////MANAGER////////////////////////////////////////////////////////
 void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream){
 
@@ -139,7 +152,7 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
     }
     //---------Управляющая логика-------------
     MAIN_CONTROLLER(ram);
-    //--------------Фабрика-------------------
+    //--------------Фабрики-------------------
     switch(ram->Status)
     {
         case 0:	        packet_Factory_00(ram);	                                                                                                                 break;
@@ -148,12 +161,10 @@ void          PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsig
         case SEND_03:	packet_Factory_03(ram);                                     	                                                                         break;
         case 9:	        packet_Factory_04(ram);	                                                                                                                 break;
         case 10:	    packet_Factory_05(ram);	                                                                                                                 break;
-        case 7:	    packet_Factory_06(ram);	                                                                                                                 break;
+        case 7:	        packet_Factory_06(ram);	                                                                                                                 break;
     }
     //---------Менеджер очередей--------------
     QUEUE_MANAGER(ram);
-
-
 }
 
 

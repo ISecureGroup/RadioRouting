@@ -5,7 +5,6 @@
 #include "../tests/paxample.h"
 #include "../tests/showme.h"
 
-
 //////////////////////ВЫДЕЛЯЕТСЯ ВСЯ ВНУТРЕННЯЯ ПАМЯТЬ И RSSI ПРИ ОТСУТСТВИИ АППАРАТНОГО
 WorkTable       RAM;
 int             RSSI;
@@ -18,8 +17,8 @@ void start(){
 /////////////////////ОСНОВНОЙ ЦИКЛ МИКРОКОНТРОЛЛЕРА
 void loop(){
     //Осн.Менеджер(Данные с датчиков, Адрес основной памяти, пакет)
-
     switch(getchar()) {
+        //отладка
         case'0': PacketManager(SensorData_0, 200, &RAM, PacketType0_1);    break;
         case'1': PacketManager(SensorData_0, 300, &RAM, PacketType0_2);    break;
         case'2': PacketManager(SensorData_0, 200, &RAM, PacketType0_3);    break;
@@ -34,11 +33,10 @@ void loop(){
         case'f': PacketManager(SensorData_0, RSSI, &RAM, PacketType0_E1);   break;
         case'n': PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);   break;
         case's': ShowRAMTable(&RAM);                                        break;
-
     }
 }
 ////////////////////ТОЧКА ВХОДА В ПРОГРАММУ
-int main() {
+int  main() {
     system("chcp 65001");
     start();
     while(1)
