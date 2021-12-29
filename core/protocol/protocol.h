@@ -14,7 +14,6 @@
 #define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   10
 #define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             10
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  10
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //---------------------ПЕРЕЧИСЛЕНИЯ------------------------
 typedef enum
@@ -34,14 +33,17 @@ typedef enum
     ////////////////// РАБОЧЕЕ СОСТОЯНИЕ
     READY                                                                                                                 //ГОТОВ К ОПРОСУ СЕТИ
     } STATE;                                                                                                   //СОСТОЯНИЕ УЗЛА, НА ОСНОВАНИИ КОТОРОГО ОТБРАСЫВАЮТСЯ ПАКЕТЫ
-
-
 typedef enum {
     END_NODE,
     ROUTER,
     GATEWAY
 } ROLE;                                                                                                    //РОЛЬ УЗЛА - ШЛЮЗ, РОУТЕР, ИЛИ КОНЕЧНЫЙ УЗЕЛ
 //----------------------СТРУКТУРЫ--------------------------
+typedef struct  AcceptedRouter {
+    unsigned int  accept;
+    unsigned long address;
+
+} AcceptedRouter;
 typedef struct  Packet {                                                                                                    //РАЗБИТЫЙ ЗАГОЛОВОК ПАКЕТА, ЕГО НАГРУЗКА И НЕКОТОРАЯ СЛУЖЕБНАЯ ИНФОРМАЦИЯ
 
     unsigned char 	_startpacket; 				                                                                            // [1 byte] symbol of start "$"
@@ -67,6 +69,14 @@ typedef struct  Packet {                                                        
 
 
 }    Packet;                                                                                     //СТРУКТУРА ЗАГОЛОВОК ПАКЕТА, ЕГО НАГРУЗКИ И НЕКОТОРОЙ СЛУЖЕБНОЙ ИНФОРМАЦИИ
+typedef struct  qUnit {
+
+    unsigned int   isDelivered;
+    unsigned short time_to_send;
+    unsigned int   repeat;
+    Packet         q_packet;
+
+};
 typedef struct  RouteUnit {
 
     unsigned long 	            address;
@@ -96,16 +106,18 @@ typedef struct  WorkTable {
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
     unsigned long	my_subrouters[MAX_SUB_ROUTERS];
-    unsigned long	my_routers[2];
+    AcceptedRouter	my_routers[2];
+
     unsigned long	i_reserve_router_from[MAX_SUB_ROUTERS];
     unsigned long	my_end_devices[MAX_END_DEVICES];
     Packet          output_packet;
     unsigned char   output_payload[LEN_PAYLOAD];
-    /////////////   ВРЕМЯ
+    /////////////   ВРЕМЯ И ОЧЕРЕДЬ
+    struct qUnit    QUEUE[5];
+    unsigned int    current_time;
     unsigned int    delta_time;
-    unsigned int    start_status_time;
-    //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
-} WorkTable;                                                                                  //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
+    unsigned int    start_status_time;                                                          //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
+} WorkTable;                                                                                    //СТРУКТУРА ПАМЯТИ ЛЮБОГО УСТРОЙСТВА
 //---------------------ИНСТРУМЕНТЫ-------------------------
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
 void            GetAddressChar(char * buff, unsigned long stream);
@@ -115,5 +127,7 @@ Packet 			ParcerHeader(const unsigned char *stream);						                      
 void			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);			            //ОСНОВНОЙ МЕНЕДЖЕР
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДОУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 unsigned char   VALIDATOR(WorkTable * ram, Packet pack);                                                                    //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
+void            QUEUE_MANAGER(WorkTable *ram);
+void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);
 
 #endif //RADIOROUTING_PROTOCOL_H

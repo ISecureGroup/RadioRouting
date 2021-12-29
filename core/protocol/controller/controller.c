@@ -1,8 +1,6 @@
 #include <time.h>
 #include "../protocol.h"
 
-
-
 int isTimeout(WorkTable *ram, unsigned int delay) {
 
     if(ram->delta_time > delay){
@@ -32,8 +30,10 @@ void DefiningRouters(WorkTable *ram) {
                 }
             }
         }
-        ram->my_routers[0] = ram->pRouterlist[0].address;
-        ram->my_routers[1] = ram->pRouterlist[1].address;
+        ram->my_routers[0].address = ram->pRouterlist[0].address;
+        ram->my_routers[0].accept = 0;
+        ram->my_routers[1].address = ram->pRouterlist[1].address;
+        ram->my_routers[1].accept = 0;
 
 }
 void MAIN_CONTROLLER(WorkTable * ram){
@@ -62,8 +62,13 @@ void MAIN_CONTROLLER(WorkTable * ram){
         case SEND_02: break;
         //------------------------------------------------------------
         case WAIT_CONFIRM_FROM_POTENTIAL_ROUTER:
-            if(isTimeout(ram, DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER))
-                ram->Status = SLEEP;
+            if(isTimeout(ram, DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER) || (ram->my_routers[0].accept == ram->my_routers[1].accept == 1)) {
+                if (ram->my_routers[0].accept == 1 || ram->my_routers[1].accept == 1) {
+                    ram->Status = ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS;
+                } else {
+                    ram->Status = SLEEP;
+                }
+            }
             break;
 
         //////////////////////////////////////////////////////////////////////////
