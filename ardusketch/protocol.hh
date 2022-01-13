@@ -1,11 +1,11 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 //////////////////////////////////////////////////////////////////////////////
-#define 	MAX_POTENTIAL_ROUTER                                            5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО РОУТЕРЕРОВ СПОСОБНЫХ ХРАНИТСЯ В ПАМЯТИ ДЛЯ ПОДСЧЕТА
-#define 	MAX_SUB_ROUTERS                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
-#define 	MAX_END_DEVICES                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
-#define 	HEADER_LEN                                                      28           //ДЛИННА ЗАГОЛОВКА ПАКЕТА
-#define 	LEN_PAYLOAD                                                     100          //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
+#define     MAX_POTENTIAL_ROUTER                                            5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО РОУТЕРЕРОВ СПОСОБНЫХ ХРАНИТСЯ В ПАМЯТИ ДЛЯ ПОДСЧЕТА
+#define     MAX_SUB_ROUTERS                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
+#define     MAX_END_DEVICES                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
+#define     HEADER_LEN                                                      28           //ДЛИННА ЗАГОЛОВКА ПАКЕТА
+#define     LEN_PAYLOAD                                                     100          //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
 #define     MAIN_ROUTER                                                     0            //ИТЕРАТОР ОСНОВОНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 #define     RESERVE_ROUTER                                                  1            //ИТЕРАТОР РЕЗЕРВНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 //////////////////////////////////////////////////////////////////////////////
@@ -49,40 +49,40 @@ typedef struct  AcceptedRouter
 
 typedef struct  Packet                                                                   //РАЗБИТЫЙ ЗАГОЛОВОК ПАКЕТА, ЕГО НАГРУЗКА И НЕКОТОРАЯ СЛУЖЕБНАЯ ИНФОРМАЦИЯ 
 {                     
-    unsigned char 	_startpacket; 				                                         // [1 byte] symbol of start "$"
-    unsigned char	_typepacket;				                                         // [1 byte] code defining the type of package
+    unsigned char   _startpacket; 				                                         // [1 byte] symbol of start "$"
+    unsigned char   _typepacket;				                                         // [1 byte] code defining the type of package
 
-    unsigned long	_sourceaddres;				                                         // [4 byte] address of source node
-    unsigned long	_destinationaddres;			                                         // [4 byte] address of destination node
+    unsigned long   _sourceaddres;				                                         // [4 byte] address of source node
+    unsigned long   _destinationaddres;			                                         // [4 byte] address of destination node
 
-    unsigned short	_synctime;					                                         // [2 byte] sync time
-    unsigned char	_session;					                                         // [1 byte] code session
-    unsigned char 	_level;						                                         // [1 byte] node level
-    unsigned char	_seance;					                                         // [1 byte] statistics field
-    unsigned char 	_nodestate;					                                         // [1 byte] Router/Alternative Router/End Node
-    unsigned char	_ordernumder;				                                         // [1 byte] number of packet in order
-    unsigned char	_ttl;						                                         // [1 byte] No comments
+    unsigned short  _synctime;					                                         // [2 byte] sync time
+    unsigned char   _session;					                                         // [1 byte] code session
+    unsigned char   _level;						                                         // [1 byte] node level
+    unsigned char   _seance;					                                         // [1 byte] statistics field
+    unsigned char   _nodestate;					                                         // [1 byte] Router/Alternative Router/End Node
+    unsigned char   _ordernumder;				                                         // [1 byte] number of packet in order
+    unsigned char   _ttl;						                                         // [1 byte] No comments
 
-    unsigned long 	_nextaddres;				                                         // [4 byte] address of next node
-    unsigned long 	_prevaddres;				                                         // [4 byte] address of previous node
+    unsigned long   _nextaddres;				                                         // [4 byte] address of next node
+    unsigned long   _prevaddres;				                                         // [4 byte] address of previous node
 
-    unsigned short 	_reserve;					                                         // [2 byte] RESERVE
-    unsigned char	_payload[LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
+    unsigned short  _reserve;					                                         // [2 byte] RESERVE
+    unsigned char   _payload[LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
     unsigned int    _plen;                                                               // [4 byte] len
 } Packet; 
 
 typedef struct  qUnit 
 {
-    unsigned int   isDelivered;                                                          //ФЛАГ ДОСТАВКИ ПАКЕТА
-    unsigned short time_to_send;                                                         //ВРЕМЯ ЖИЗНИ ПАКЕТА В ОЧЕРЕДИ
-    unsigned int   repeat;                                                               //КОЛИЧЕСТВО ПОВТОРЕНИЙ
-    Packet         q_packet;                                                             //САМ ПАКЕТ В ОЧЕРЕДИ
+    unsigned int    isDelivered;                                                          //ФЛАГ ДОСТАВКИ ПАКЕТА
+    unsigned short  time_to_send;                                                         //ВРЕМЯ ЖИЗНИ ПАКЕТА В ОЧЕРЕДИ
+    unsigned int    repeat;                                                               //КОЛИЧЕСТВО ПОВТОРЕНИЙ
+    Packet          q_packet;                                                             //САМ ПАКЕТ В ОЧЕРЕДИ
 };
-typedef struct  RouteUnit                                                                //ЮНИТ 
+typedef struct  RouteUnit                                                                 //ЮНИТ 
 {
-    unsigned long 	            address;                                                 //АДРЕС УСТРОЙСТВА 
-    unsigned int				device_counter;
-    unsigned int                rssi;
+    unsigned long   address;                                                              //АДРЕС УСТРОЙСТВА 
+    unsigned int    device_counter;
+    unsigned int    rssi;
 
 } RouteUnit;                                                                             //СТРУКТУРА ИМИТИРУЮЩАЯ АССОЦИАТИВНЫЙ СПИСОК ХРАНЯЩИЙ АДРЕС УСТРОЙСТВ И КОЛИЧЕСТВО ЕГО ПОВТОРЕНИЙ
 typedef struct  WorkTable                                                                
@@ -101,19 +101,19 @@ typedef struct  WorkTable
 
     /////////////   ДАННЫЕ В РАМКАХ СЕТИ
     unsigned char   my_role;
-    unsigned char	my_session;
-    unsigned char	my_level;
-    unsigned short	my_time;
-    unsigned char	my_seance;
+    unsigned char   my_session;
+    unsigned char   my_level;
+    unsigned short  my_time;
+    unsigned char   my_seance;
     unsigned char   packet_order;
 
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
-    unsigned long	my_subrouters[MAX_SUB_ROUTERS];
-    AcceptedRouter	my_routers[2];
-    unsigned long	i_reserve_router_from[MAX_SUB_ROUTERS];
-    unsigned long	my_end_devices[MAX_END_DEVICES];
+    unsigned long   my_subrouters[MAX_SUB_ROUTERS];
+    AcceptedRouter  my_routers[2];
+    unsigned long   i_reserve_router_from[MAX_SUB_ROUTERS];
+    unsigned long   my_end_devices[MAX_END_DEVICES];
     Packet          output_packet;
     unsigned char   output_payload[LEN_PAYLOAD];
     
@@ -129,8 +129,8 @@ unsigned long   GetAddress(const unsigned char *stream, int startbyte);         
 void            GetAddressChar(char * buff, unsigned long stream);                                      //КОНВЕРТИРУЕТ ULONG АДРЕСС В МАССИВ ЧАРОВ
 //------------------------МЕТОДЫ---------------------------
 void            SetDefault(WorkTable *ram);                                                             //СБРОС УСТРОЙСТВА
-Packet 			ParcerHeader(const unsigned char *stream);						                        //ПАРСЕР ЗАГОЛОВКА
-void			PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);	//ОСНОВНОЙ МЕНЕДЖЕР
+Packet          ParcerHeader(const unsigned char *stream);                                              //ПАРСЕР ЗАГОЛОВКА
+void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);   //ОСНОВНОЙ МЕНЕДЖЕР
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                         //РАБОТА С ДОУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 unsigned char   VALIDATOR(WorkTable * ram, Packet pack);                                                //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ
 void            QUEUE_MANAGER(WorkTable *ram);                                                          //МЕНЕДЖЕР ОЧЕРЕДЕЙ
