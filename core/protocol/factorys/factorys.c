@@ -1,6 +1,8 @@
 #include "../protocol.h"
 
-void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload)
+///////////////////////////////////////////////////////////////////////////////////////////
+
+void packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload)
 {
     for(int i=0;i<LEN_PAYLOAD; i++)
         ram->output_packet._payload[i] = 0;
@@ -19,32 +21,41 @@ void          packetConstructor(WorkTable *ram,unsigned char _startpacket,unsign
     ram->output_packet._nextaddres          = _nextaddres;
     ram->output_packet._prevaddres          = _prevaddres;
     ram->output_packet._reserve             = _reserve;
+
     for(int i=0;i<100;i++)
+    {
         if(_payload[i]!='#')
-            ram->output_packet._payload[i]      = _payload[i];
+            ram->output_packet._payload[i] = _payload[i];
         else {
             ram->output_packet._payload[i] = '#';
             break;
         }
+    }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_00(WorkTable * ram){
     packetConstructor(ram,
-                      '$',              //$
-                      0x00,             //ТИП ПАКЕТА
-                      ram->MAC,                   //АДРЕС ОТПРАВИТЕЛЯ
-                      0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,               //ВРЕМЯ
-                      ram->my_level,              //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      0x00,                //СЕАНС
-                      ram->Device,                //РОЛЬ МОДУЛЯ
-                      0x00,            //НОМЕР ПАКЕТА
-                      0x01,                   //TTL
-                      0x55555555,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,              //РЕЗЕРВ
-                      ram->output_payload);       //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                      //$
+                      0x00,                     //ТИП ПАКЕТА
+                      ram->MAC,                 //АДРЕС ОТПРАВИТЕЛЯ
+                      0x00000000,               //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,             //ВРЕМЯ
+                      ram->my_level,            //УРОВЕНЬ
+                      ram->my_session,          //СЕССИЯ
+                      0x00,                     //СЕАНС
+                      ram->Device,              //РОЛЬ МОДУЛЯ
+                      0x00,                     //НОМЕР ПАКЕТА
+                      0x01,                     //TTL
+                      0x55555555,               //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,               //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,                   //РЕЗЕРВ
+                      ram->output_payload);     //ПОЛЕЗНАЯ НАГРУЗКА
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_01(WorkTable * ram){
 
     char buff[4];
@@ -80,6 +91,9 @@ void packet_Factory_01(WorkTable * ram){
                       0x5555,               //РЕЗЕРВ
                       ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_02(WorkTable * ram){
 
     char buff[4];
@@ -99,97 +113,111 @@ void packet_Factory_02(WorkTable * ram){
         }
     }
     packetConstructor(ram,
-                      '$',              //$
-                      0x02,             //ТИП ПАКЕТА
-                      ram->MAC,                   //АДРЕС ОТПРАВИТЕЛЯ
-                      0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,               //ВРЕМЯ
-                      ram->my_level,              //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      0x00,                //СЕАНС
-                      0x00,              //РОЛЬ МОДУЛЯ
-                      ram->packet_order,          //НОМЕР ПАКЕТА
-                      0x01,                   //TTL
-                      0x55555555,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,             //РЕЗЕРВ
-                      ram->output_payload);      //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                  //$
+                      0x02,                 //ТИП ПАКЕТА
+                      ram->MAC,             //АДРЕС ОТПРАВИТЕЛЯ
+                      0x00000000,           //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,         //ВРЕМЯ
+                      ram->my_level,        //УРОВЕНЬ
+                      ram->my_session,      //СЕССИЯ
+                      0x00,                 //СЕАНС
+                      0x00,                 //РОЛЬ МОДУЛЯ
+                      ram->packet_order,    //НОМЕР ПАКЕТА
+                      0x01,                 //TTL
+                      0x55555555,           //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,           //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,               //РЕЗЕРВ
+                      ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_03(WorkTable * ram){
     packetConstructor(ram,
-                      '$',              //$
-                      0x03,             //ТИП ПАКЕТА
-                      ram->MAC,                   //АДРЕС ОТПРАВИТЕЛЯ
-                      0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,               //ВРЕМЯ
-                      ram->my_level,              //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      0x00,                //СЕАНС
-                      0x01,              //РОЛЬ МОДУЛЯ
-                      ram->packet_order,          //НОМЕР ПАКЕТА
-                      0x01,                   //TTL
-                      0x55555555,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,             //РЕЗЕРВ
-                      ram->output_payload);      //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                  //$
+                      0x03,                 //ТИП ПАКЕТА
+                      ram->MAC,             //АДРЕС ОТПРАВИТЕЛЯ
+                      0x00000000,           //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,         //ВРЕМЯ
+                      ram->my_level,        //УРОВЕНЬ
+                      ram->my_session,      //СЕССИЯ
+                      0x00,                 //СЕАНС
+                      0x01,                 //РОЛЬ МОДУЛЯ
+                      ram->packet_order,    //НОМЕР ПАКЕТА
+                      0x01,                 //TTL
+                      0x55555555,           //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,           //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,               //РЕЗЕРВ
+                      ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_04(WorkTable * ram){
     packetConstructor(ram,
-                      '$',              //$
-                      0x04,             //ТИП ПАКЕТА
-                      ram->gateway,                   //АДРЕС ОТПРАВИТЕЛЯ
-                      0x00000000,   //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,               //ВРЕМЯ
-                      ram->my_level,              //УРОВЕНЬ
-                      ram->my_session,            //СЕССИЯ
-                      ram->my_seance,                //СЕАНС
-                      0x00,              //РОЛЬ МОДУЛЯ
-                      ram->packet_order,          //НОМЕР ПАКЕТА
-                      0x1e,                   //TTL
-                      0xffffffff,       //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      0x00000000,       //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,             //РЕЗЕРВ
-                      ram->output_payload);      //ПОЛЕЗНАЯ НАГРУЗКА
+                      '$',                  //$
+                      0x04,                 //ТИП ПАКЕТА
+                      ram->gateway,         //АДРЕС ОТПРАВИТЕЛЯ
+                      0x00000000,           //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,         //ВРЕМЯ
+                      ram->my_level,        //УРОВЕНЬ
+                      ram->my_session,      //СЕССИЯ
+                      ram->my_seance,       //СЕАНС
+                      0x00,                 //РОЛЬ МОДУЛЯ
+                      ram->packet_order,    //НОМЕР ПАКЕТА
+                      0x1e,                 //TTL
+                      0xffffffff,           //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      0x00000000,           //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,               //РЕЗЕРВ
+                      ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_05(WorkTable * ram){
     int choise = MAIN_ROUTER;
     packetConstructor(ram,
                       '$',                                //$
                       0x05,                               //ТИП ПАКЕТА
-                      ram->MAC,                                     //АДРЕС ОТПРАВИТЕЛЯ
-                      ram->my_routers[choise].address,                      //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,                                 //ВРЕМЯ
-                      ram->my_level,                                //УРОВЕНЬ
-                      ram->my_session,                              //СЕССИЯ
-                      ram->my_seance,                               //СЕАНС
-                      0x00,                                //РОЛЬ МОДУЛЯ
-                      ram->packet_order,                            //НОМЕР ПАКЕТА
-                      0x01,                                     //TTL
+                      ram->MAC,                           //АДРЕС ОТПРАВИТЕЛЯ
+                      ram->my_routers[choise].address,    //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,                       //ВРЕМЯ
+                      ram->my_level,                      //УРОВЕНЬ
+                      ram->my_session,                    //СЕССИЯ
+                      ram->my_seance,                     //СЕАНС
+                      0x00,                               //РОЛЬ МОДУЛЯ
+                      ram->packet_order,                  //НОМЕР ПАКЕТА
+                      0x01,                               //TTL
                       0x55555555,                         //АДРЕС СЛЕДУЮЩЕГО УЗЛА
                       0x00000000,                         //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,                               //РЕЗЕРВ
-                      ram->output_payload);                        //ПОЛЕЗНАЯ НАГРУЗКА
+                      0x5555,                             //РЕЗЕРВ
+                      ram->output_payload);               //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 void packet_Factory_06(WorkTable * ram){
     int choise = MAIN_ROUTER;
     packetConstructor(ram,
                       '$',                                //$
                       0x06,                               //ТИП ПАКЕТА
-                      ram->MAC,                                     //АДРЕС ОТПРАВИТЕЛЯ
-                      ram->gateway,                                 //АДРЕС ПОЛУЧАТЕЛЯ
-                      ram->my_time,                                 //ВРЕМЯ
-                      ram->my_level,                                //УРОВЕНЬ
-                      ram->my_session,                              //СЕССИЯ
-                      ram->my_seance,                               //СЕАНС
-                      ram->my_role,                                 //РОЛЬ МОДУЛЯ
-                      ram->packet_order,                            //НОМЕР ПАКЕТА
-                      0x01,                                     //TTL
-                      ram->my_routers[choise].address,                      //АДРЕС СЛЕДУЮЩЕГО УЗЛА
-                      ram->temporary_prev_address,                  //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
-                      0x5555,                               //РЕЗЕРВ
-                      ram->output_payload);                        //ПОЛЕЗНАЯ НАГРУЗКА
+                      ram->MAC,                           //АДРЕС ОТПРАВИТЕЛЯ
+                      ram->gateway,                       //АДРЕС ПОЛУЧАТЕЛЯ
+                      ram->my_time,                       //ВРЕМЯ
+                      ram->my_level,                      //УРОВЕНЬ
+                      ram->my_session,                    //СЕССИЯ
+                      ram->my_seance,                     //СЕАНС
+                      ram->my_role,                       //РОЛЬ МОДУЛЯ
+                      ram->packet_order,                  //НОМЕР ПАКЕТА
+                      0x01,                               //TTL
+                      ram->my_routers[choise].address,    //АДРЕС СЛЕДУЮЩЕГО УЗЛА
+                      ram->temporary_prev_address,        //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
+                      0x5555,                             //РЕЗЕРВ
+                      ram->output_payload);               //ПОЛЕЗНАЯ НАГРУЗКА
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
