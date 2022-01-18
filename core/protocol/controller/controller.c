@@ -2,7 +2,6 @@
 #include "../protocol.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 int isTimeout(WorkTable *ram, unsigned int delay) {
 
     if(ram->delta_time > delay)
@@ -12,7 +11,6 @@ int isTimeout(WorkTable *ram, unsigned int delay) {
     }
     return 0;
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DefiningRouters(WorkTable *ram) {
@@ -90,10 +88,9 @@ void MAIN_CONTROLLER(WorkTable * ram){
                 }
             }
             break;
-            //////////////////////////////////////////////////////////////////////////
         case ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS:
             if(isTimeout(ram, DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS))
-                ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;
+                ram->Status = SEND_00;
             break;
             //------------------------------------------------------------
         case WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES:
@@ -105,11 +102,12 @@ void MAIN_CONTROLLER(WorkTable * ram){
             //------------------------------------------------------------
         case ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES:
             if(isTimeout(ram, DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES))
-                ram->Status = READY;
+                ram->Status = SEND_03A;
             break;
             //------------------------------------------------------------
         case READY: break;
 
+            //////////////////////////////////////////////////////////////////////////
     }
 }
 
