@@ -30,6 +30,7 @@ typedef enum                                                                    
     WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                                          //ОЖИДАНИЕ ПАКЕТА 02
     SEND_03,                                                                             //ОТПРАВКА ПАКЕТА 03
     ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                               //ПОВТОРНОЕ ОЖИДАНИЕ ПАКЕТОВ 02
+    SEND_03A,
     ////////////////// РАБОЧЕЕ СОСТОЯНИЕ///////////////////////
     READY                                                                                //ГОТОВ К ОПРОСУ СЕТИ
 } STATE;

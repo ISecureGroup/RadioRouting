@@ -181,13 +181,11 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     //--------------Фабрики-------------------
     switch(ram->Status)
     {
-        case 0:	        packet_Factory_00(ram);	                                                    break;
-        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;               break;
-        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;   break;
-        case SEND_03:   packet_Factory_03(ram);                                                     break;
-        case 9:	        packet_Factory_04(ram);	                                                    break;
-        case 10:        packet_Factory_05(ram);	                                                    break;
-        case 11:        packet_Factory_06(ram);	                                                    break;
+        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               break;
+        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   break;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       break;
+        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    break;
+        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    break;
     }
     //---------Менеджер очередей--------------
     QUEUE_MANAGER(ram);
