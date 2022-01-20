@@ -49,11 +49,11 @@ void pl_Handler_02(WorkTable * ram, Packet pack)
 
         if(buffer == ram->MAC)
         {
-            for(int j=0;j<MAX_SUB_ROUTERS;j++)
+            for(int j=0;j<MAX_MAIN_SUBROUTERS;j++)
             {
-                if((ram->my_end_devices[j] == 0 || ram->my_end_devices[j] == pack._sourceaddres) && i == 0)
+                if((ram->i_main_router_from[j] == 0 || ram->i_main_router_from[j] == pack._sourceaddres) && i == 0)
                 {
-                    ram->my_end_devices[j] = pack._sourceaddres;
+                    ram->i_main_router_from[j] = pack._sourceaddres;
                     break;
                 }
                 if((ram->i_reserve_router_from[j] == 0 || ram->i_reserve_router_from[j] == pack._sourceaddres) && i != 0)
@@ -76,7 +76,13 @@ void pl_Handler_03(WorkTable * ram, Packet pack)
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC)
         {
-            ram->Status = ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS;
+            for(int j=0;j<2;j++)
+            {
+                if(ram->my_routers[j].address == pack._sourceaddres)
+                {
+                    ram->my_routers[j].accept = 1;
+                }
+            }
         }
     }
     ServiceFieldAdding(ram,pack);

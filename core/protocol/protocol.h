@@ -2,19 +2,19 @@
 #define PROTOCOL_H
 //////////////////////////////////////////////////////////////////////////////
 #define     MAX_POTENTIAL_ROUTER                                            5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО РОУТЕРЕРОВ СПОСОБНЫХ ХРАНИТСЯ В ПАМЯТИ ДЛЯ ПОДСЧЕТА
-#define     MAX_SUB_ROUTERS                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
-#define     MAX_END_DEVICES                                                 5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
+#define     MAX_RESERVE_SUBROUTERS                                          5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ РОУТЕРОВ
+#define     MAX_MAIN_SUBROUTERS                                             5            //МАКСИМАЛЬНОЕ КОЛИЧЕСТВО ДОЧЕРНИХ КОНЕЧНЫХ УСТРОЙСТВ
 #define     HEADER_LEN                                                      28           //ДЛИННА ЗАГОЛОВКА ПАКЕТА
 #define     LEN_PAYLOAD                                                     100          //МАКСИМАЛЬНАЯ ДЛИННА ПОЛЕЗНОЙ НАГРУЗКИ
 #define     MAIN_ROUTER                                                     0            //ИТЕРАТОР ОСНОВОНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 #define     RESERVE_ROUTER                                                  1            //ИТЕРАТОР РЕЗЕРВНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 //////////////////////////////////////////////////////////////////////////////
-#define     DELAY_OF_SLEEP                                                  3500
-#define     DELAY_OF_START_DEFINING_ROUTERS                                 3500
-#define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          3000
-#define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   3000
-#define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             3000
-#define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  3000
+#define     DELAY_OF_SLEEP                                                  10
+#define     DELAY_OF_START_DEFINING_ROUTERS                                 10
+#define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          10
+#define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   10
+#define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             10
+#define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  10
 //////////////////////////////////////////////////////////////////////////////
 typedef enum                                                                             //СОСТОЯНИЕ УЗЛА, НА ОСНОВАНИИ КОТОРОГО ОТБРАСЫВАЮТСЯ ПАКЕТЫ
 {
@@ -111,10 +111,10 @@ typedef struct  WorkTable
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
-    unsigned long   my_subrouters[MAX_SUB_ROUTERS];
+    unsigned long   my_subrouters[MAX_MAIN_SUBROUTERS];
     AcceptedRouter  my_routers[2];
-    unsigned long   i_reserve_router_from[MAX_SUB_ROUTERS];
-    unsigned long   my_end_devices[MAX_END_DEVICES];
+    unsigned long   i_reserve_router_from[MAX_RESERVE_SUBROUTERS];
+    unsigned long   i_main_router_from[MAX_MAIN_SUBROUTERS];
     Packet          output_packet;
     unsigned char   output_payload[LEN_PAYLOAD];
 
@@ -124,7 +124,6 @@ typedef struct  WorkTable
     unsigned long   delta_time;
     unsigned long   start_status_time;                                                                  //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
 } WorkTable;
-
 //---------------------ИНСТРУМЕНТЫ-------------------------
 unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                 //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG

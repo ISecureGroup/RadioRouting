@@ -101,7 +101,8 @@ void packet_Factory_02(WorkTable * ram){
     for(int i=0;i<LEN_PAYLOAD; i++)
         ram->output_payload[i] = 0;
 
-    for(int i=0;i<2; i++){
+    for(int i=0;i<2; i++)
+    {
         GetAddressChar(buff, ram->my_routers[i].address);
         for(int j=0;j<4;j++) {
             ram->output_payload[k] = buff[j];
@@ -134,6 +135,34 @@ void packet_Factory_02(WorkTable * ram){
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void packet_Factory_03(WorkTable * ram){
+
+    char buff[4];
+    int k = 0;
+
+    for(int i = 0;i < LEN_PAYLOAD; i++)
+        ram->output_payload[i] = 0;
+
+    for(int i=0;i < MAX_MAIN_SUBROUTERS; i++)
+    {
+        GetAddressChar(buff, ram->i_main_router_from[i]);
+        for(int j = 0;j<4;j++) {
+            ram->output_payload[k] = buff[j];
+            k++;
+        }
+    }
+    for(int i = 0;i < MAX_RESERVE_SUBROUTERS; i++)
+    {
+        GetAddressChar(buff, ram->i_main_router_from[i]);
+        for(int j = 0;j < 4;j++) {
+            ram->output_payload[k] = buff[j];
+            k++;
+        }
+        if(i = MAX_RESERVE_SUBROUTERS-1)
+        {
+            ram->output_payload[k] = '#';
+            break;
+        }
+    }
     packetConstructor(ram,
                       '$',                  //$
                       0x03,                 //ТИП ПАКЕТА
