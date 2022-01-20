@@ -42,18 +42,18 @@ void SetDefault(WorkTable *ram)
     for(int i=0; i < LEN_PAYLOAD; i++)
         ram->many_payload[i] = 0;
 
-    for(int i=0; i < MAX_SUB_ROUTERS; i++)
+    for(int i=0; i < MAX_RESERVE_SUBROUTERS; i++)
         ram->i_reserve_router_from[i] = 0;
 
-    for(int i=0; i < MAX_END_DEVICES; i++)
-        ram->my_end_devices[i] = 0;
+    for(int i=0; i < MAX_MAIN_SUBROUTERS; i++)
+        ram->i_main_router_from[i] = 0;
 
     for(int i=0; i < MAX_POTENTIAL_ROUTER; i++)
     {
         ram->pRouterlist[i].address = 0;
         ram->pRouterlist[i].device_counter = 0;
     }
-    for(int i=0; i < MAX_SUB_ROUTERS; i++)
+    for(int i=0; i < MAX_RESERVE_SUBROUTERS; i++)
         ram->my_subrouters[i] = 0;
 
     ram->my_routers[0].accept   = 0;
