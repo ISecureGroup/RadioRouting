@@ -1,4 +1,6 @@
 #include "../protocol.h"
+#include "../../../tests/showme.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +33,7 @@ void packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _
             break;
         }
     }
+    PrintPacketLine(ram->output_packet);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

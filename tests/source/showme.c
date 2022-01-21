@@ -2,27 +2,34 @@
 #include <stdlib.h>
 #include "../../core/protocol/protocol.h"
 
-void ShowEvent(char *s){
+void ShowEvent(char *s)
+{
     printf("\n|---------------------------------%s---------------------------------\n",s);
 }
-void PrintStatus(STATE stt){
+void PrintStatus(STATE stt)
+{
     switch (stt) {
-        case 0:printf(" СОН\n");break;
-        case 1:printf(" ОТПРАВЛЯЮ 01\n");break;
-        case 2:printf(" ОПРЕДЕЛЯЮ РОУТЕРЫ\n");break;
-        case 3:printf(" ОТПРАВЛЯЮ 02\n");break;
-        case 4:printf(" РОУТЕРЫ ОПРЕДЕЛЕНЫ\n");break;
-        case 5:printf(" ЖДЕМ ПОДТВЕРЖДЕНИЯ\n");break;
-        case 6:printf(" НЕ ПРИШЛО ПОДТВЕРЖДЕНИЕ\n");break;
-        case 7:printf(" Я НАШЕЛ СВОЙ АДРЕСС ПРИ ОПРОСЕ \n");break;
-        case 8: printf(" МОЙ ПАКЕТ UNO УСПЕШНО ДОСТАВЛЕН \n");break;
-        case 9:printf(" ПРИШЕЛ ПАКЕТ НА РЕТРАНСЛЯЦИЮ \n");break;
+        //////////////////ПЕРВЫЙ ЭТАП//////////////////////////////
+        case 0:printf(" ОТПРАВЛЯЮ 00\n");                               break;
+        case 1:printf(" СОН\n");                                        break;
+        case 2:printf(" ОТПРАВЛЯЮ 01\n");                               break;
+        case 3:printf(" ОПРЕДЕЛЯЮ РОУТЕРЫ\n");                          break;
+        case 4:printf(" ОТПРАВЛЯЮ 02\n");                               break;
+        case 5:printf(" ЖДЕМ ПОДТВЕРЖДЕНИЯ ОТ РОУТЕРА\n");              break;
+            ////////////////// ВТОРОЙ ЭТАП/////////////////////////////
+        case 6:printf(" ОБЪЯВЛЯЮ СЕБЯ РОУТЕРОМ\n");                     break;
+        case 7:printf(" ОЖИДАЮ ПОДТВЕРЖДЕНИЯ ОТ УСТРОЙСТВ\n");          break;
+        case 8:printf(" ОТПРАВЛЯЮ 03 \n");                              break;
+        case 9:printf(" ЕЩЕ РАЗ ОЖИДАЮ ПОДТВЕРЖДЕНИЯ ОТ УСТРОЙСТВ\n");  break;
+        case 10:printf(" ОТПРАВЛЯЮ 03 ЕЩЕ РАЗ \n");                      break;
     }
 }
-void PrintAddress(unsigned long address){
+void PrintAddress(unsigned long address)
+{
     printf(" %02lx %02lx %02lx %02lx ",(address>>24),(address>>16) & 255,(address>>8) & 255,(address) & 255);
 }
-void ShowRAMTable(WorkTable *ram){
+void ShowRAMTable(WorkTable *ram)
+{
 
     printf("\n\n|------------------------------ПАМЯТЬ УСТРОЙСТВА 0x%lx--------------------------------\n",ram->MAC);
     printf("|  Список потенциальных роутеров\n");
@@ -59,7 +66,8 @@ void ShowRAMTable(WorkTable *ram){
     }
     printf("|------------------------------------------------------------------------------------------\n");
 }
-void PrintPacket(Packet exmpl){
+void PrintPacket(Packet exmpl)
+{
     printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     printf("\n\n\n|-----------------------------------Входящий пакет-----------------------------------------\n");
     printf("|  Стартовый байт| %x \t|	Адрес узла отправителя	| ",exmpl._startpacket);		PrintAddress(exmpl._sourceaddres);        printf("\n");
@@ -80,7 +88,8 @@ void PrintPacket(Packet exmpl){
     }
     printf("\n|--------------------------------Конец полезной нагрузки-----------------------------------");
 }
-int PrintPacketLine(Packet exmpl){
+int PrintPacketLine(Packet exmpl)
+{
     if(exmpl._startpacket != '$')
         return 0;
     printf("%c | %x | ",exmpl._startpacket ,exmpl._typepacket);

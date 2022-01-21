@@ -72,7 +72,6 @@ void SetDefault(WorkTable *ram)
     ram->gateway      = 0;
     ram->temporary_prev_address = 0;
 }
-
 Packet ParcerHeader(const unsigned char *stream)
 {
 

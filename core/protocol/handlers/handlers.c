@@ -1,5 +1,7 @@
 #include "../protocol.h"
+
 /////////////////////////HANDLERS//////////////////////////////
+
 void pl_Handler_00(WorkTable * ram, Packet pack, int RSSI)
 {
     for(int i = 0; i<MAX_POTENTIAL_ROUTER; i++)
@@ -13,7 +15,9 @@ void pl_Handler_00(WorkTable * ram, Packet pack, int RSSI)
             break;
         }
 }
+
 //////////////////////////////////////////////////////////////
+
 void pl_Handler_01(WorkTable * ram, Packet pack)
 {
     unsigned long buffer;
@@ -66,6 +70,7 @@ void pl_Handler_02(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
+
 //////////////////////////////////////////////////////////////
 
 void pl_Handler_03(WorkTable * ram, Packet pack)
@@ -87,6 +92,7 @@ void pl_Handler_03(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
+
 //////////////////////////////////////////////////////////////
 
 void pl_Handler_04(WorkTable * ram, Packet pack)
