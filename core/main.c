@@ -28,6 +28,7 @@ void loop()
         ShowRAMTable(&RAM);
         Sleep(12000);
         // SEND_01
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
         // START_DEF_ROUTERS
         PacketManager(SensorData_0, RSSI, &RAM, PacketType1_1);
         PacketManager(SensorData_0, RSSI, &RAM, PacketType1_2);
@@ -35,13 +36,20 @@ void loop()
         ShowRAMTable(&RAM);
         Sleep(12000);
         //SEND 02
-
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        ShowRAMTable(&RAM);
         //WAIT CONFIRM FROM POTENTIAL ROUTER
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_1);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_2);
+        ShowRAMTable(&RAM);
+        Sleep(12000);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        ShowRAMTable(&RAM);
         //ANNOUNCEMENT POTENTIAL ROUTER STATUS
         //WAITING CONFIRM ROUTER STATUS FROM DEVICES
         //ADDITIONAL WAITING CONFIRM ROUTER STATUS FROM DEVICES
         //READY
-        Sleep(1500);
+        Sleep(555555);
 
 }
 ////////////////////ТОЧКА ВХОДА В ПРОГРАММУ

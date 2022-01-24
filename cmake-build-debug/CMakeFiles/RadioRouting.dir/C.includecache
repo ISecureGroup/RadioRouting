@@ -6,25 +6,13 @@
 
 #IncludeRegexTransform: 
 
-M:/RadioRouting/core/main.c
-stdlib.h
--
-time.h
--
-stdio.h
--
-windows.h
--
-protocol/protocol.h
+M:/RadioRouting/core/protocol/factorys/factorys.c
+../protocol.h
 M:/RadioRouting/core/protocol/protocol.h
-../tests/paxample.h
-M:/RadioRouting/tests/paxample.h
-../tests/showme.h
+../../../tests/showme.h
 M:/RadioRouting/tests/showme.h
 
 M:/RadioRouting/core/protocol/protocol.h
-
-M:/RadioRouting/tests/paxample.h
 
 M:/RadioRouting/tests/showme.h
 

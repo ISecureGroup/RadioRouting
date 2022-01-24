@@ -1,7 +1,6 @@
 #include "../protocol.h"
 #include "../../../tests/showme.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload)
@@ -39,6 +38,9 @@ void packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void packet_Factory_00(WorkTable * ram){
+    for(int i=0;i<LEN_PAYLOAD; i++)
+        ram->output_payload[i] = 0;
+    ram->output_payload[0] = '#';
     packetConstructor(ram,
                       '$',                      //$
                       0x00,                     //ТИП ПАКЕТА
@@ -56,6 +58,7 @@ void packet_Factory_00(WorkTable * ram){
                       0x5555,                   //РЕЗЕРВ
                       ram->output_payload);     //ПОЛЕЗНАЯ НАГРУЗКА
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +135,6 @@ void packet_Factory_02(WorkTable * ram){
                       0x00000000,           //АДРЕС ПРЕДЫДУЩЕГО УЗЛА
                       0x5555,               //РЕЗЕРВ
                       ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

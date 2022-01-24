@@ -51,6 +51,10 @@ void ShowRAMTable(WorkTable *ram)
             i++;
         }
     printf("\n|------------------------------------------------------------------------------------------\n");
+    printf("Основной и резервный роутер и их квитирование\n");
+    printf("\nОсновной:   %d |    ",ram->my_routers[0].accept); PrintAddress(ram->my_routers[0].address);
+    printf("\nРезервный:  %d |    ",ram->my_routers[1].accept); PrintAddress(ram->my_routers[1].address);
+    printf("\n|------------------------------------------------------------------------------------------\n");
     printf("Кто выбрал меня роутером\n");
     i = 0;
     while(ram->i_main_router_from[i]!=0){
@@ -92,6 +96,7 @@ int PrintPacketLine(Packet exmpl)
 {
     if(exmpl._startpacket != '$')
         return 0;
+    printf("\n\nПАКЕТ НА ОТПРАВКУ----------------------------------------------------------------------------\n");
     printf("%c | %x | ",exmpl._startpacket ,exmpl._typepacket);
     PrintAddress(exmpl._sourceaddres);          printf("|");
     PrintAddress(exmpl._destinationaddres);     printf("|");
@@ -105,5 +110,6 @@ int PrintPacketLine(Packet exmpl)
         printf(" ");
         i++;
     }
+    printf("\n\n---------------------------------------------------------------------------------------------\n");
 }
 
