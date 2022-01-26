@@ -73,13 +73,13 @@ void loop()
         //WAITING CONFIRM ROUTER STATUS FROM DEVICES
         PacketManager(SensorData_0, RSSI, &RAM, PacketType2_0);
         PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_2);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //SEND 03
         PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
         ShowRAMTable(&RAM);
         //ADDITIONAL WAITING CONFIRM ROUTER STATUS FROM DEVICES
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //SEND 03

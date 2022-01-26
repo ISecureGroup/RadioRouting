@@ -134,7 +134,7 @@ unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
 void            GetAddressChar(char * buff, unsigned long stream);
 void            packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload);
-///////////////////////РАБОЧИЕ АЛГОРИТМЫ///////////////////////// //УПРАВЛЯЮЩАЯ ЛОГИКА ПРОГРАММЫ
+///////////////////////РАБОЧИЕ АЛГОРИТМЫ/////////////////////////
 void            DefiningRouters(WorkTable *ram);
 int             isTimeout(WorkTable *ram, unsigned int delay);
 void            SetDefault(WorkTable *ram);
