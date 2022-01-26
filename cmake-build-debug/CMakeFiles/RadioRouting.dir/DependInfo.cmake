@@ -9,9 +9,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "M:/RadioRouting/core/main.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/core/main.c.obj"
-  "M:/RadioRouting/core/protocol/controller/controller.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/core/protocol/controller/controller.c.obj"
-  "M:/RadioRouting/core/protocol/factorys/factorys.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/core/protocol/factorys/factorys.c.obj"
-  "M:/RadioRouting/core/protocol/handlers/handlers.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/core/protocol/handlers/handlers.c.obj"
   "M:/RadioRouting/core/protocol/protocol.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/core/protocol/protocol.c.obj"
   "M:/RadioRouting/tests/source/showme.c" "M:/RadioRouting/cmake-build-debug/CMakeFiles/RadioRouting.dir/tests/source/showme.c.obj"
   )

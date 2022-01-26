@@ -21,7 +21,8 @@ void PrintStatus(STATE stt)
         case 7:printf(" ОЖИДАЮ ПОДТВЕРЖДЕНИЯ ОТ УСТРОЙСТВ\n");          break;
         case 8:printf(" ОТПРАВЛЯЮ 03 \n");                              break;
         case 9:printf(" ЕЩЕ РАЗ ОЖИДАЮ ПОДТВЕРЖДЕНИЯ ОТ УСТРОЙСТВ\n");  break;
-        case 10:printf(" ОТПРАВЛЯЮ 03 ЕЩЕ РАЗ \n");                      break;
+        case 10:printf(" ОТПРАВЛЯЮ 03 ЕЩЕ РАЗ \n");                     break;
+        case 11:printf(" ГОТОВ \n");                                    break;
     }
 }
 void PrintAddress(unsigned long address)
@@ -58,14 +59,14 @@ void ShowRAMTable(WorkTable *ram)
     printf("Кто выбрал меня роутером\n");
     i = 0;
     while(ram->i_main_router_from[i]!=0){
-        PrintAddress(ram->i_main_router_from[i]);
+        PrintAddress(ram->i_main_router_from[i]); printf("\n");
         i++;
     }
     printf("|------------------------------------------------------------------------------------------\n");
     printf("Кто выбрал меня резервным роутером\n");
     i = 0;
     while(ram->i_reserve_router_from[i]!=0){
-        PrintAddress(ram->i_reserve_router_from[i]);
+        PrintAddress(ram->i_reserve_router_from[i]); printf("\n");
         i++;
     }
     printf("|------------------------------------------------------------------------------------------\n");
@@ -92,11 +93,11 @@ void PrintPacket(Packet exmpl)
     }
     printf("\n|--------------------------------Конец полезной нагрузки-----------------------------------");
 }
-int PrintPacketLine(Packet exmpl)
+int PrintPacketLine(char *s,Packet exmpl)
 {
     if(exmpl._startpacket != '$')
         return 0;
-    printf("\n\nПАКЕТ НА ОТПРАВКУ----------------------------------------------------------------------------\n");
+    printf("%s ПАКЕТ | ",s);
     printf("%c | %x | ",exmpl._startpacket ,exmpl._typepacket);
     PrintAddress(exmpl._sourceaddres);          printf("|");
     PrintAddress(exmpl._destinationaddres);     printf("|");
@@ -110,6 +111,6 @@ int PrintPacketLine(Packet exmpl)
         printf(" ");
         i++;
     }
-    printf("\n\n---------------------------------------------------------------------------------------------\n");
+    printf("\n");
 }
 
