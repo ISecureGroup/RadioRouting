@@ -87,24 +87,6 @@
 		<Unit filename="M:/RadioRouting/core/main.c">
 			<Option target="RadioRouting"/>
 		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/controller/controller.c">
-			<Option target="RadioRouting"/>
-		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/controller/controller.h">
-			<Option target="RadioRouting"/>
-		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/factorys/factorys.c">
-			<Option target="RadioRouting"/>
-		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/factorys/factorys.h">
-			<Option target="RadioRouting"/>
-		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/handlers/handlers.c">
-			<Option target="RadioRouting"/>
-		</Unit>
-		<Unit filename="M:/RadioRouting/core/protocol/handlers/handlers.h">
-			<Option target="RadioRouting"/>
-		</Unit>
 		<Unit filename="M:/RadioRouting/core/protocol/protocol.c">
 			<Option target="RadioRouting"/>
 		</Unit>

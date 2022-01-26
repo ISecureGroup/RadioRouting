@@ -6,19 +6,6 @@ CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\core\protocol\protocol.h
 CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\tests\paxample.h
 CMakeFiles\RadioRouting.dir\core\main.c.obj: ..\tests\showme.h
 
-CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: ..\core\protocol\controller\controller.c
-CMakeFiles\RadioRouting.dir\core\protocol\controller\controller.c.obj: ..\core\protocol\protocol.h
-
-CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj: ..\core\protocol\factorys\factorys.c
-CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj: ..\core\protocol\protocol.h
-CMakeFiles\RadioRouting.dir\core\protocol\factorys\factorys.c.obj: ..\tests\showme.h
-
-CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj: ..\core\protocol\handlers\handlers.c
-CMakeFiles\RadioRouting.dir\core\protocol\handlers\handlers.c.obj: ..\core\protocol\protocol.h
-
-CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\controller\controller.h
-CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\factorys\factorys.h
-CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\handlers\handlers.h
 CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\protocol.c
 CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\core\protocol\protocol.h
 CMakeFiles\RadioRouting.dir\core\protocol\protocol.c.obj: ..\tests\showme.h

@@ -4,7 +4,7 @@
 void            ShowEvent(char *s);
 void 			PrintAddress(unsigned long address);
 void            PrintPacket(Packet exmpl);
-int             PrintPacketLine(Packet exmpl);
+int             PrintPacketLine(char *s,Packet exmpl);
 void            ShowRAMTable(WorkTable *ram);
 
 #endif
