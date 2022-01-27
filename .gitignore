@@ -51,10 +51,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 *.idea
-cmake-build-debug/
 cmake-build-debug/Testing/Temporary/LastTest.log
 docs/~$исание протокола.docx
 docs/~$Пакеты протокола.xlsx
 cmake-build-debug/Testing/Temporary/LastTest.log
 *.log
-*.log
+**/cmake-build-debug
