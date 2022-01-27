@@ -69,6 +69,8 @@
 #define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   5
 #define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             5
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  5
+
+
 ////////////////////////////ПЕРЕЧИСЛЕНИЯ/////////////////////////
 typedef enum
 {
@@ -174,18 +176,18 @@ typedef struct  WorkTable
     struct qUnit    QUEUE[5];
     unsigned long   current_time;
     unsigned long   delta_time;
-    unsigned long   start_status_time;                                                                  //ВРЕМЯ НАХОЖДЕНИЯ УСТРОЙСТВА В АКТУАЛЬНОМ СТАТУСЕ
+    unsigned long   start_status_time;
 } WorkTable;
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
-void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);                       //ОСНОВНОЙ МЕНЕДЖЕР
+void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParcerHeader(const unsigned char *stream);
-unsigned char   VALIDATOR(WorkTable * ram, Packet pack); //!! Переименовать: Validator (без CapsLock)                                                                   //МЕТОД ОТБРАСЫВАЮЩИЙ ПАКЕТЫ КОТОРЫЕ НЕ НАЗНАЧАЛИСЬ УСТРОЙСТВУ//ПАРСЕР ЗАГОЛОВКА
-void            MAIN_CONTROLLER(WorkTable * ram);   //!! Переименовать: StatusController (без CapsLock)
-void            QUEUE_MANAGER(WorkTable *ram);     //!! Переименовать: QueueManager (без CapsLock)                                                                         //МЕНЕДЖЕР ОЧЕРЕДЕЙ
+Packet          ParseHeader(const unsigned char *stream);
+unsigned char   Validator(WorkTable * ram, Packet pack);
+void            StatusController(WorkTable * ram);
+void            QueueManager(WorkTable *ram);
 /////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
 unsigned long   GetRandomAddress();
-unsigned long   GetAddress(const unsigned char *stream, int startbyte);                                                     //ВЫТЯГИВАЕТ ИЗ ПОТОКА CHAR* АДРЕСА В ФОРМАТЕ ULONG
+unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            GetAddressChar(char * buff, unsigned long stream);
 void            packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload);
 ///////////////////////РАБОЧИЕ АЛГОРИТМЫ/////////////////////////
@@ -195,13 +197,13 @@ void            SetDefault(WorkTable *ram);
 void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДРУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
-void 			pl_Handler_00(WorkTable * ram,Packet pack, int RSSI);     //!! Переименовать: packet_Handler_00                                                    //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void			pl_Handler_01(WorkTable * ram,Packet pack);               //....                                             //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
-void 			pl_Handler_02(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
-void 			pl_Handler_03(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "Я РОУТЕР"
-void 			pl_Handler_04(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "ОПРОС УСТРОЙСТВ"
-void 			pl_Handler_05(WorkTable * ram,Packet pack);                                                                 //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
-void 			pl_Handler_06(WorkTable * ram,Packet pack);             //!! Переименовать: packet_Handler_06                                                    //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
+void 			packet_Handler_00(WorkTable * ram, Packet pack, int RSSI);                                                      //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void			packet_Handler_01(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
+void 			packet_Handler_02(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
+void 			packet_Handler_03(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я РОУТЕР"
+void 			packet_Handler_04(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОПРОС УСТРОЙСТВ"
+void 			packet_Handler_05(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
+void 			packet_Handler_06(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 /////////////////////////ФАБРИКИ////////////////////////////////
 void            packet_Factory_00(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void            packet_Factory_01(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
@@ -210,5 +212,8 @@ void            packet_Factory_03(WorkTable * ram);                             
 void            packet_Factory_04(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
 void            packet_Factory_05(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
 void            packet_Factory_06(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////ПЕРЕМЕННЫЕ/////////////////////////
+WorkTable       RAM;                                        //Память, выделяемая под логику протокола
+int             RSSI;                                       //Значение урвня принятого сигнала
+///////////////////////////////////////////////////////////////
 #endif //RADIOROUTING_PROTOCOL_H
