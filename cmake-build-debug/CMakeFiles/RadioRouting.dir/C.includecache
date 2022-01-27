@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+M:/RadioRouting/core/main.c
+stdlib.h
+-
+time.h
+-
+stdio.h
+-
+windows.h
+-
+protocol/protocol.h
+M:/RadioRouting/core/protocol/protocol.h
+../tests/paxample.h
+M:/RadioRouting/tests/paxample.h
+../tests/showme.h
+M:/RadioRouting/tests/showme.h
+
 M:/RadioRouting/core/protocol/protocol.c
 stdio.h
 -
@@ -20,5 +36,15 @@ M:/RadioRouting/tests/showme.h
 
 M:/RadioRouting/core/protocol/protocol.h
 
+M:/RadioRouting/tests/paxample.h
+
 M:/RadioRouting/tests/showme.h
+
+M:/RadioRouting/tests/source/showme.c
+stdio.h
+-
+stdlib.h
+-
+../../core/protocol/protocol.h
+M:/RadioRouting/core/protocol/protocol.h
 
