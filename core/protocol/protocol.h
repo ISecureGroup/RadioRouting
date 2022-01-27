@@ -62,8 +62,9 @@
 #define     MAX_RESERVE_SUBROUTERS                                          5
 #define     MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER                         5
 #define     MAX_MAIN_SUBROUTERS                                             5
+#define     MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER                            5
 #define     HEADER_LEN                                                      28
-#define     LEN_PAYLOAD                                                     100
+#define     LEN_PAYLOAD                                                     100            // !Переименовать на "MAX_LEN_PAYLOAD
 #define     MAIN_ROUTER                                                     0                                               //ИТЕРАТОР ОСНОВОНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 #define     RESERVE_ROUTER                                                  1                                               //ИТЕРАТОР РЕЗЕРВНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
 //////////////////////////////////////////////////////////////////////////////
@@ -128,7 +129,7 @@ typedef struct  Packet
 
     unsigned short  _reserve;					                                         // [2 byte] RESERVE
     unsigned char   _payload[LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
-    unsigned int    _plen;                                                               // [4 byte] len
+    unsigned int    _plen;                                                               // !!моменять название переменной на "payload_len"          // [4 byte] payload length
 } Packet;
 typedef struct  qUnit
 {
@@ -172,7 +173,7 @@ typedef struct  WorkTable
     unsigned long   my_subrouters[MAX_MAIN_SUBROUTERS];
     AcceptedRouter  my_routers[2];
     unsigned long   i_reserve_router_from[MAX_RESERVE_SUBROUTERS];
-    unsigned long   i_main_router_from[MAX_MAIN_SUBROUTERS];
+    unsigned long   i_main_router_from[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];    // поменять на "i_main_router_for"
     Packet          output_packet;
     unsigned char   output_payload[LEN_PAYLOAD];
 
