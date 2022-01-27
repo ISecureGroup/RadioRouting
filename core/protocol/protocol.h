@@ -169,7 +169,7 @@ typedef struct  WorkTable
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
 void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParcerHeader(const unsigned char *stream);
+Packet          ParseHeader(const unsigned char *stream);
 unsigned char   Validator(WorkTable * ram, Packet pack);
 void            StatusController(WorkTable * ram);
 void            QueueManager(WorkTable *ram);

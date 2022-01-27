@@ -4,7 +4,7 @@
 #include "protocol.h"
 #include "../../tests/showme.h"
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParcerHeader(const unsigned char *stream)
+Packet          ParseHeader(const unsigned char *stream)
 {
 
     Packet 				buffer;							//ВРЕМЕННЫЙ БУФЕР ДЛЯ ПАКЕТА
@@ -135,7 +135,7 @@ void            QueueManager(WorkTable *ram)
 void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream)
 {
 
-    Packet buffer = ParcerHeader(stream);
+    Packet buffer = ParseHeader(stream);
     PrintPacketLine("->",buffer);
     //------------Обработчики-----------------
     switch(Validator(ram, buffer))
