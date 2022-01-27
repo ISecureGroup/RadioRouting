@@ -44,7 +44,7 @@ Packet          ParcerHeader(const unsigned char *stream)
 
     return buffer;
 }
-unsigned char   VALIDATOR(WorkTable * ram, Packet pack){
+unsigned char   Validator(WorkTable * ram, Packet pack){
 
     if(pack._startpacket != '$')
         return 0x99;
@@ -65,7 +65,7 @@ unsigned char   VALIDATOR(WorkTable * ram, Packet pack){
     }
     return pack._typepacket;
 }
-void            MAIN_CONTROLLER(WorkTable * ram){
+void            StatusController(WorkTable * ram){
 
     ram->delta_time = clock()/CLOCKS_PER_SEC - ram->start_status_time;
 
@@ -128,7 +128,7 @@ void            MAIN_CONTROLLER(WorkTable * ram){
             //////////////////////////////////////////////////////////////////////////
     }
 }
-void            QUEUE_MANAGER(WorkTable *ram)
+void            QueueManager(WorkTable *ram)
 {
 }
 /////////////////////МЕНЕДЖЕР//////////////////////////////////
@@ -138,20 +138,27 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     Packet buffer = ParcerHeader(stream);
     PrintPacketLine("->",buffer);
     //------------Обработчики-----------------
-    switch(VALIDATOR(ram, buffer))
+    switch(Validator(ram, buffer))
     {
-        case 0x00:	pl_Handler_00(ram, buffer, RSSI);       break;
-        case 0x01:	pl_Handler_01(ram, buffer);	            break;
-        case 0x02:	pl_Handler_02(ram, buffer);	            break;
-        case 0x03:	pl_Handler_03(ram, buffer);	            break;
-        case 0x04:	pl_Handler_04(ram, buffer);	            break;
-        case 0x05:	pl_Handler_05(ram, buffer);	            break;
-        case 0x06:	pl_Handler_06(ram, buffer);	            break;
+        case 0x00:
+            packet_Handler_00(ram, buffer, RSSI);       break;
+        case 0x01:
+            packet_Handler_01(ram, buffer);	            break;
+        case 0x02:
+            packet_Handler_02(ram, buffer);	            break;
+        case 0x03:
+            packet_Handler_03(ram, buffer);	            break;
+        case 0x04:
+            packet_Handler_04(ram, buffer);	            break;
+        case 0x05:
+            packet_Handler_05(ram, buffer);	            break;
+        case 0x06:
+            packet_Handler_06(ram, buffer);	            break;
         case 0x99:                                          break;
         case 0xff:  break;
     }
     //---------Управляющая логика-------------
-    MAIN_CONTROLLER(ram);
+    StatusController(ram);
     //--------------Фабрики-------------------
     switch(ram->Status)
     {
@@ -162,7 +169,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
         case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    break;
     }
     //---------Менеджер очередей--------------
-    QUEUE_MANAGER(ram);
+    QueueManager(ram);
 }
 /////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
 unsigned long GetRandomAddress()
@@ -320,7 +327,7 @@ void ServiceFieldAdding(WorkTable *ram,Packet pack)
     ram->my_time        = pack._synctime;
 }
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
-void pl_Handler_00(WorkTable * ram, Packet pack, int RSSI)
+void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
 {
     for(int i = 0; i<MAX_POTENTIAL_ROUTER; i++)
         if(ram->pRouterlist[i].address == 0 || ram->pRouterlist[i].address == pack._sourceaddres)
@@ -333,7 +340,7 @@ void pl_Handler_00(WorkTable * ram, Packet pack, int RSSI)
             break;
         }
 }
-void pl_Handler_01(WorkTable * ram, Packet pack)
+void packet_Handler_01(WorkTable * ram, Packet pack)
 {
     unsigned long buffer;
     for(int i = 0;i < pack._plen;i += 4)
@@ -356,7 +363,7 @@ void pl_Handler_01(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
-void pl_Handler_02(WorkTable * ram, Packet pack)
+void packet_Handler_02(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
     for(int i=0;i<pack._plen;i+=4)
@@ -382,7 +389,7 @@ void pl_Handler_02(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
-void pl_Handler_03(WorkTable * ram, Packet pack)
+void packet_Handler_03(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
     for(int i=0;i<pack._plen;i+=4)
@@ -401,7 +408,7 @@ void pl_Handler_03(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
-void pl_Handler_04(WorkTable * ram, Packet pack)
+void packet_Handler_04(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
     for(int i=0;i<pack._plen;i+=4)
@@ -414,7 +421,7 @@ void pl_Handler_04(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
-void pl_Handler_05(WorkTable * ram, Packet pack)
+void packet_Handler_05(WorkTable * ram, Packet pack)
 {
     for(int iter = 0; iter < LEN_PAYLOAD; iter++)
     {
@@ -429,7 +436,7 @@ void pl_Handler_05(WorkTable * ram, Packet pack)
     }
     ServiceFieldAdding(ram,pack);
 }
-void pl_Handler_06(WorkTable * ram, Packet pack)
+void packet_Handler_06(WorkTable * ram, Packet pack)
 {
     if(pack._sourceaddres == ram->MAC)
         ram->Status = READY;
