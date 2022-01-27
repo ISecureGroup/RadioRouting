@@ -41,11 +41,14 @@
 *.su
 *.idb
 *.pdb
+*.cmake
+*.internal
 
 # Kernel Module Compile Results
 *.mod*
 *.cmd
 .tmp_versions/
+cmake-build-debug/
 modules.order
 Module.symvers
 Mkfile.old
@@ -57,4 +60,4 @@ docs/~$Пакеты протокола.xlsx
 cmake-build-debug/Testing/Temporary/LastTest.log
 *.log
 **/cmake-build-debug
-*.log
+

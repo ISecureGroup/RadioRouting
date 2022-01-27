@@ -1,12 +1,3 @@
-#include <stdlib.h>
-#include <time.h>
-#include <stdio.h>
-#include <windows.h>
-#include "protocol/protocol.h"
-#include "../tests/paxample.h"
-#include "../tests/showme.h"
-
-
 /**
  * Данный файл содержит точку входа в приложение, которое управляет неким устройством на базе микроконтроллера
  * (далее Устройство). Устройство в рамках своей работы обменивается данными с другими устройствами через беспроводную
@@ -21,6 +12,15 @@
  * @version 1.0
  */
 
+
+
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <windows.h>
+#include "protocol/protocol.h"
+#include "../tests/paxample.h"
+#include "../tests/showme.h"
 
 WorkTable       RAM;                                        //Память, выделяемая под логику протокола
 int             RSSI;                                       //Значение урвня принятого сигнала
