@@ -536,7 +536,6 @@ void packet_Factory_02(WorkTable * ram){
                       ram->output_payload); //ПОЛЕЗНАЯ НАГРУЗКА
 }
 void packet_Factory_03(WorkTable * ram){
-
     char buff[4];
     int k = 0;
 
