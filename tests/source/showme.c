@@ -58,15 +58,15 @@ void ShowRAMTable(WorkTable *ram)
     printf("\n|------------------------------------------------------------------------------------------\n");
     printf("Кто выбрал меня роутером\n");
     i = 0;
-    while(ram->i_main_router_from[i]!=0){
-        PrintAddress(ram->i_main_router_from[i]); printf("\n");
+    while(ram->i_main_router_for[i] != 0){
+        PrintAddress(ram->i_main_router_for[i]); printf("\n");
         i++;
     }
     printf("|------------------------------------------------------------------------------------------\n");
     printf("Кто выбрал меня резервным роутером\n");
     i = 0;
-    while(ram->i_reserve_router_from[i]!=0){
-        PrintAddress(ram->i_reserve_router_from[i]); printf("\n");
+    while(ram->i_reserve_router_for[i] != 0){
+        PrintAddress(ram->i_reserve_router_for[i]); printf("\n");
         i++;
     }
     printf("|------------------------------------------------------------------------------------------\n");

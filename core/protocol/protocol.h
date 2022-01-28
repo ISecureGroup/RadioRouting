@@ -55,18 +55,18 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-
-
 //////////////////////////////////////////////////////////////////////////////
 #define     MAX_POTENTIAL_ROUTER                                            5
 #define     MAX_RESERVE_SUBROUTERS                                          5
+#define     MAX_LEN_OF_ROUTER_LIST                                          5
 #define     MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER                         5
-#define     MAX_MAIN_SUBROUTERS                                             5
 #define     MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER                            5
+//////////////////////////////////////////////////////////////////////////////
 #define     HEADER_LEN                                                      28
-#define     LEN_PAYLOAD                                                     100            // !Переименовать на "MAX_LEN_PAYLOAD
-#define     MAIN_ROUTER                                                     0                                               //ИТЕРАТОР ОСНОВОНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
-#define     RESERVE_ROUTER                                                  1                                               //ИТЕРАТОР РЕЗЕРВНОГО РОУТЕРА В ТАБЛИЦАХ ДЛЯ УДОБСТВА
+#define     MAX_LEN_PAYLOAD                                                 100
+//////////////////////////////////////////////////////////////////////////////
+#define     MAIN_ROUTER                                                     0
+#define     RESERVE_ROUTER                                                  1
 //////////////////////////////////////////////////////////////////////////////
 #define     DELAY_OF_SLEEP                                                  5
 #define     DELAY_OF_START_DEFINING_ROUTERS                                 5
@@ -97,6 +97,7 @@ typedef enum
 } STATE;
 typedef enum
 {
+    UNDEFINED,
     END_NODE,
     ROUTER,
     GATEWAY
@@ -128,7 +129,7 @@ typedef struct  Packet
     unsigned long   _prevaddres;				                                         // [4 byte] address of previous node
 
     unsigned short  _reserve;					                                         // [2 byte] RESERVE
-    unsigned char   _payload[LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
+    unsigned char   _payload[MAX_LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
     unsigned int    _plen;                                                               // !!моменять название переменной на "payload_len"          // [4 byte] payload length
 } Packet;
 typedef struct  qUnit
@@ -148,7 +149,7 @@ typedef struct  RouteUnit
 typedef struct  WorkTable
 {
     /////////////   ДАННЫЕ С ДАТЧИКОВ (ПРИЛОЖЕНИЯ)
-    unsigned char   many_payload[LEN_PAYLOAD];
+    unsigned char   many_payload[MAX_LEN_PAYLOAD];
     unsigned int    len_of_list;
 
     /////////////   ТАБЛИЦА ПОСТРОЕНИЯ СЕТИ
@@ -170,12 +171,11 @@ typedef struct  WorkTable
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
-    unsigned long   my_subrouters[MAX_MAIN_SUBROUTERS];
     AcceptedRouter  my_routers[2];
-    unsigned long   i_reserve_router_from[MAX_RESERVE_SUBROUTERS];
-    unsigned long   i_main_router_from[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];    // поменять на "i_main_router_for"
+    unsigned long   i_reserve_router_for[MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER];
+    unsigned long   i_main_router_for[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];
     Packet          output_packet;
-    unsigned char   output_payload[LEN_PAYLOAD];
+    unsigned char   output_payload[MAX_LEN_PAYLOAD];
 
     /////////////   ВРЕМЯ И ОЧЕРЕДЬ
     struct qUnit    QUEUE[5];
@@ -194,7 +194,22 @@ void            QueueManager(WorkTable *ram);
 unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            GetAddressChar(char * buff, unsigned long stream);
-void            packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload);
+void            packetConstructor(WorkTable *ram,
+                                  unsigned char _startpacket,
+                                  unsigned char _typepacket,
+                                  unsigned long _sourceaddres,
+                                  unsigned long _destinationaddres,
+                                  unsigned short _synctime,
+                                  unsigned char _level,
+                                  unsigned char _session,
+                                  unsigned char _seance,
+                                  unsigned char _nodestate,
+                                  unsigned char _ordernumder,
+                                  unsigned char _ttl,
+                                  unsigned long _nextaddres,
+                                  unsigned long _prevaddres,
+                                  unsigned short _reserve,
+                                  const unsigned char *_payload);
 ///////////////////////РАБОЧИЕ АЛГОРИТМЫ/////////////////////////
 void            DefiningRouters(WorkTable *ram);
 int             isTimeout(WorkTable *ram, unsigned int delay);
@@ -202,13 +217,13 @@ void            SetDefault(WorkTable *ram);
 void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДРУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
-void 			packet_Handler_00(WorkTable * ram, Packet pack, int RSSI);                                                      //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void			packet_Handler_01(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
-void 			packet_Handler_02(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
-void 			packet_Handler_03(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "Я РОУТЕР"
-void 			packet_Handler_04(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОПРОС УСТРОЙСТВ"
-void 			packet_Handler_05(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
-void 			packet_Handler_06(WorkTable * ram, Packet pack);                                                                //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
+void 			packet_Handler_00(WorkTable * ram, Packet pack, int RSSI);                                                  //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void			packet_Handler_01(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
+void 			packet_Handler_02(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
+void 			packet_Handler_03(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "Я РОУТЕР"
+void 			packet_Handler_04(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОПРОС УСТРОЙСТВ"
+void 			packet_Handler_05(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
+void 			packet_Handler_06(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 /////////////////////////ФАБРИКИ////////////////////////////////
 void            packet_Factory_00(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void            packet_Factory_01(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"

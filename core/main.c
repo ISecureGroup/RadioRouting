@@ -12,17 +12,11 @@
  * @version 1.0
  */
 
-
-
-#include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
 #include <windows.h>
 #include "protocol/protocol.h"
 #include "../tests/paxample.h"
 #include "../tests/showme.h"
-
-
 
 /**
  * Функция выполняющаяся при запуске микроконтроллера. Служит для первоначальной инициализации переменных.
@@ -30,9 +24,8 @@
 void start(){
     RAM.MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
     RAM.Status = SLEEP;                                     // Первоначальное состояние устройства
+    RAM.Device = GATEWAY;
     RAM.start_status_time = clock()/CLOCKS_PER_SEC;
-    printf("Мой адресс: ");
-    PrintAddress(RAM.MAC); printf("\n");
 }
 /**
  * Функция, в которой сосредоточена основная логика работы устройства. Данная функция выполняется в бесконечном цикле,
