@@ -27,13 +27,9 @@
  *                                                               обновления сведений о сети, обновления текущих настроек
  *                                                               на основе информации полученной из обработанного пакета;
  *
-<<<<<<< Updated upstream
  *  6) Контроллер состояний узла сети/устройства (StatusController) - вспомогательный модуль, являющейся функцией,
  *                                                                    определяющей условия и порядок перехода устройства
  *                                                                    в то или иное состояние;
-=======
- * 
->>>>>>> Stashed changes
  *
  *  7) Набор фабрик исходящих пакетов (packet_Factory_xx) - набор функций, отвечающих за генерацию исходящих (ответных)
  *                                                          пакетов, посредством которых устройство взаимодействует с
@@ -55,19 +51,31 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-//////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------НАСТРОЙКИ--------------------------------------------------------------
+/**
+ * Максимальное количество устройств сети, регистрируемых данным устройством
+ */
 #define     MAX_POTENTIAL_ROUTER                                            5
 #define     MAX_RESERVE_SUBROUTERS                                          5
 #define     MAX_LEN_OF_ROUTER_LIST                                          5
 #define     MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER                         5
 #define     MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER                            5
-//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Размеры заголовка и полезной нагрузки(содержимого) пакета
+ */
 #define     HEADER_LEN                                                      28
 #define     MAX_LEN_PAYLOAD                                                 100
-//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Размеры заголовка и полезной нагрузки(содержимого) пакета
+ */
 #define     MAIN_ROUTER                                                     0
 #define     RESERVE_ROUTER                                                  1
-//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Задержки состояний (сколько времени устройство должно находится в том или ином состоянии)
+ */
 #define     DELAY_OF_SLEEP                                                  5
 #define     DELAY_OF_START_DEFINING_ROUTERS                                 5
 #define     DELAY_OF_CONFIRM_FROM_POTENTIAL_ROUTER                          5
@@ -76,25 +84,35 @@
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  5
 
 
-////////////////////////////ПЕРЕЧИСЛЕНИЯ/////////////////////////
+//---------------------------------------------РАБОЧИЕ ПОЛЯ-------------------------------------------------------------
+
+/**
+ * Перечисление, которое хранит все стадии(состояния) жизненного цикла _Протокола_
+ */
 typedef enum
 {
-    //////////////////ПЕРВЫЙ ЭТАП//////////////////////////////
-    SEND_00,                                                                             //ОТПРАВКА ПАКЕТА 00
-    SLEEP,                                                                               //СОСТОЯНИЕ ОЖИДАНИЯ КОМАНД НА ПОСТРОЕНИЕ СЕТИ (ОЖИДАНИЕ ПАКЕТА 00)
-    SEND_01,                                                                             //ОТПРАВКА ПАКЕТА 01
-    START_DEFINING_ROUTERS,                                                              //ОЖИДАЕТ ПАКЕТЫ ОТ СОСЕДЕЙ, ФОРМИРУЕТ ТАБЛИЦУ И ВЫБИРАЕТ СВОИ РОДИТЕЛЬСКИЕ РОУТЕРЫ
-    SEND_02,                                                                             //СОХРАНЯЕТ АДРЕС УСТРОЙСТВА В СПРИСОК УСТРОЙСТВ ОТ КОТОРЫХ ОЖИДАЕТСЯ ПОДТВЕРЖДЕНИЕ
-    WAIT_CONFIRM_FROM_POTENTIAL_ROUTER,                                                  //ОЖИДАНИЕ ПОЛУЧЕНИЯ ПОДТВЕРЖДЕНИЯ
-    ////////////////// ВТОРОЙ ЭТАП/////////////////////////////
-    ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS,                                                //ОБЪЯВЛЕНИЕ СЕБЯ РОУТЕРОМ
-    WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                                          //ОЖИДАНИЕ ПАКЕТА 02
-    SEND_03,                                                                             //ОТПРАВКА ПАКЕТА 03
-    ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                               //ПОВТОРНОЕ ОЖИДАНИЕ ПАКЕТОВ 02
+    //ПЕРВАЯ ФАЗА ЭТАПА ПОСТРОЕНИЯ СЕТИ
+    SEND_00,                                                                  //отправка пакета 00
+    SLEEP,                                                                    //ожидание команды на построение сети (ожидание пакета 00)
+    SEND_01,                                                                  //отправка пакета 01
+    START_DEFINING_ROUTERS,                                                   //ожидание пакета 01 от соседей, определение основного и резервного роутеров
+    SEND_02,                                                                  //отправка пакета 02
+    WAIT_CONFIRM_FROM_POTENTIAL_ROUTER,                                       //ожидание пакета 03 от потенциального роутера для подтверждения доставки пакета 02
+
+    //ВТОРАЯ ФАЗА ЭТАПА ПОСТРОЕНИЯ СЕТИ
+    ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS,                                     //объявление себя потенциальным роутером (отправка пакета 00)
+    WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                               //ожидание пакетов 02
+    SEND_03,                                                                  //отправка пакета 03
+    ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES,                    //повторное ожидание пакетов 02
     SEND_03A,
-    ////////////////// РАБОЧЕЕ СОСТОЯНИЕ///////////////////////
-    READY                                                                                //ГОТОВ К ОПРОСУ СЕТИ
+
+    //ЭТАП ПЕРЕДАЧИ ДАННЫХ ПО СЕТИ
+    READY                                                                     //отправка пакета 03 в дополнительное время
 } STATE;
+
+/**
+ * Перечисление, которое хранит список ролей устройства
+ */
 typedef enum
 {
     UNDEFINED,
@@ -102,26 +120,33 @@ typedef enum
     ROUTER,
     GATEWAY
 } ROLE;
-////////////////////////////СТРУКТУРЫ////////////////////////////
-typedef struct  AcceptedRouter
+
+/**
+ * Структура описывающая основные свойства вышестоящего(родительского) роутера
+ */
+typedef struct  AcceptedRouter                                              // !Переименовать в UpRouter
 {
     unsigned int  accept;
     unsigned long address;
 
-} AcceptedRouter;
+} AcceptedRouter;                                                           // !Переименовать в UpRouter
+
+/**
+ * Структура пакетов, определяемая _Протоколом_
+ */
 typedef struct  Packet
 {
-    unsigned char   _startpacket; 				                                         // [1 byte] symbol of start "$"
-    unsigned char   _typepacket;				                                         // [1 byte] code defining the type of package
+    unsigned char   _startpacket; 				                             // [1 byte] символ начала пакета "$"
+    unsigned char   _typepacket;				                             // [1 byte] тип пакета
 
-    unsigned long   _sourceaddres;				                                         // [4 byte] address of source node
-    unsigned long   _destinationaddres;			                                         // [4 byte] address of destination node
+    unsigned long   _sourceaddres;				                             // [4 byte] адрес отправителя пакета
+    unsigned long   _destinationaddres;			                             // [4 byte] адрес назначения пакета
 
-    unsigned short  _synctime;					                                         // [2 byte] sync time
-    unsigned char   _session;					                                         // [1 byte] code session
-    unsigned char   _level;						                                         // [1 byte] node level
-    unsigned char   _seance;					                                         // [1 byte] statistics field
-    unsigned char   _nodestate;					                                         // [1 byte] Router/Alternative Router/End Node
+    unsigned short  _synctime;					                             // [2 byte] время синхронизации
+    unsigned char   _session;					                             // [1 byte] код сессии (сессия - период работы сети в рамках одной топологии до перестроения)
+    unsigned char   _level;						                             // [1 byte] уровень, на котором находится узел (число хопов до шлюза)
+    unsigned char   _seance;					                             // [1 byte] код сеанса (сеанс - период работы сети, когда происходит опрос устройств. При сбросе сессии сеанс тоже сбрасывается)
+    unsigned char   _nodestate;					                             // [1 byte] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     unsigned char   _ordernumder;				                                         // [1 byte] number of packet in order
     unsigned char   _ttl;						                                         // [1 byte] No comments
 
