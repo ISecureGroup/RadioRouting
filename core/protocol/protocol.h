@@ -124,12 +124,12 @@ typedef enum
 /**
  * Структура описывающая основные свойства вышестоящего(родительского) роутера
  */
-typedef struct  AcceptedRouter                                              // !Переименовать в UpRouter
+typedef struct  UpRouter
 {
     unsigned int  accept;
     unsigned long address;
 
-} AcceptedRouter;                                                           // !Переименовать в UpRouter
+} UpRouter;
 
 /**
  * Структура пакетов, определяемая _Протоколом_
@@ -196,7 +196,7 @@ typedef struct  WorkTable
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
-    AcceptedRouter  my_routers[2];
+    UpRouter  my_routers[2];
     unsigned long   i_reserve_router_for[MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER];
     unsigned long   i_main_router_for[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];
     Packet          output_packet;

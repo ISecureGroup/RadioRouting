@@ -202,7 +202,22 @@ void GetAddressChar(char* buff, unsigned long stream)
     buff[2] = (char)((stream>>8)  & 255);
     buff[3] = (char)((stream)     & 255);
 }
-void packetConstructor(WorkTable *ram,unsigned char _startpacket,unsigned char _typepacket,unsigned long _sourceaddres,unsigned long _destinationaddres,unsigned short _synctime,unsigned char _level,unsigned char _session,unsigned char _seance,unsigned char _nodestate,unsigned char _ordernumder,unsigned char _ttl,unsigned long _nextaddres,unsigned long _prevaddres,unsigned short _reserve,const unsigned char *_payload)
+void packetConstructor(WorkTable *ram,
+                       unsigned char _startpacket,
+                       unsigned char _typepacket,
+                       unsigned long _sourceaddres
+                       ,unsigned long _destinationaddres,
+                       unsigned short _synctime,
+                       unsigned char _level,
+                       unsigned char _session,
+                       unsigned char _seance,
+                       unsigned char _nodestate,
+                       unsigned char _ordernumder,
+                       unsigned char _ttl,
+                       unsigned long _nextaddres,
+                       unsigned long _prevaddres,
+                       unsigned short _reserve,
+                       const unsigned char *_payload)
 {
     for(int i=0; i < MAX_LEN_PAYLOAD; i++)
         ram->output_packet._payload[i] = 0;
