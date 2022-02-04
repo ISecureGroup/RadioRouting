@@ -21,11 +21,10 @@
 /**
  * Функция выполняющаяся при запуске микроконтроллера. Служит для первоначальной инициализации переменных.
  */
+unsigned char OutPacket[128];
+
 void start(){
-    RAM.MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
-    RAM.Status = SLEEP;                                     // Первоначальное состояние устройства
-    RAM.Device = GATEWAY;
-    RAM.start_status_time = clock()/CLOCKS_PER_SEC;
+    StartInitProtocol();
 }
 /**
  * Функция, в которой сосредоточена основная логика работы устройства. Данная функция выполняется в бесконечном цикле,
@@ -35,46 +34,46 @@ void loop()
 {
         // В SLEEP
         ShowRAMTable(&RAM);
-        PacketManager(SensorData_0, 200, &RAM, PacketType0_1);
-        PacketManager(SensorData_0, 300, &RAM, PacketType0_2);
-        PacketManager(SensorData_0, 200, &RAM, PacketType0_3);
-        PacketManager(SensorData_0, 100, &RAM, PacketType0_4);
+        PacketManager(SensorData_0, 200, &RAM, PacketType0_1,OutPacket);
+        PacketManager(SensorData_0, 300, &RAM, PacketType0_2,OutPacket);
+        PacketManager(SensorData_0, 200, &RAM, PacketType0_3,OutPacket);
+        PacketManager(SensorData_0, 100, &RAM, PacketType0_4,OutPacket);
         ShowRAMTable(&RAM);
         Sleep(7000);
         // SEND_01
-        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO,OutPacket);
         // START_DEF_ROUTERS
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_1);
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_2);
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_3);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_1,OutPacket);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_2,OutPacket);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType1_3,OutPacket);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //SEND 02
-        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO,OutPacket);
         //WAIT CONFIRM FROM POTENTIAL ROUTER
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_1);
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_2);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_1,OutPacket);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType3_2,OutPacket);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //ANNOUNCEMENT POTENTIAL ROUTER STATUS
         //SEND 00
-        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO,OutPacket);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //WAITING CONFIRM ROUTER STATUS FROM DEVICES
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_0);
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1);
-        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_2);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_0,OutPacket);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_1,OutPacket);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketType2_2,OutPacket);
         ShowRAMTable(&RAM);
         Sleep(7000);
         //SEND 03
-        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO,OutPacket);
         ShowRAMTable(&RAM);
         //ADDITIONAL WAITING CONFIRM ROUTER STATUS FROM DEVICES
         ShowRAMTable(&RAM);
         Sleep(7000);
         //SEND 03
-        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO);
+        PacketManager(SensorData_0, RSSI, &RAM, PacketTypeZERO,OutPacket);
         ShowRAMTable(&RAM);
         //READY
         Sleep(7000);

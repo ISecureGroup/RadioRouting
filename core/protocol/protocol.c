@@ -145,10 +145,10 @@ void            QueueManager(WorkTable *ram)
 {
 }
 /////////////////////МЕНЕДЖЕР//////////////////////////////////
-void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream)
+void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream)
 {
 
-    Packet buffer = ParseHeader(stream);
+    Packet buffer = ParseHeader(instream);
     PrintPacketLine("->",buffer);
     //------------Обработчики-----------------
     switch(Validator(ram, buffer))
@@ -344,6 +344,13 @@ void ServiceFieldAdding(WorkTable *ram,Packet pack)
     ram->my_level       = pack._level + 1;
     ram->my_seance      = pack._seance;
     ram->my_time        = pack._synctime;
+}
+void StartInitProtocol()
+{
+    RAM.MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
+    RAM.Status = SLEEP;                                     // Первоначальное состояние устройства
+    RAM.Device = GATEWAY;
+    RAM.start_status_time = clock()/CLOCKS_PER_SEC;
 }
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
