@@ -177,7 +177,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     //---------Менеджер очередей--------------
     QueueManager(ram);
 }
-/////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
+/////////////////////////ИНСТРУМЕНТЫ////////////////////////////
 unsigned long GetRandomAddress()
 {
     unsigned long address;
