@@ -22,7 +22,7 @@ Packet          ParseHeader(const unsigned char *stream)
         return buffer;
     }
 
-    buffer._plen          = len - HEADER_LEN-1;
+    buffer.payload_len          = len - HEADER_LEN - 1;
     buffer._startpacket   = stream[0];
     buffer._typepacket    = stream[1];
     buffer._level         = stream[12];
@@ -370,7 +370,7 @@ void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
 void packet_Handler_01(WorkTable * ram, Packet pack)
 {
     unsigned long buffer;
-    for(int i = 0;i < pack._plen;i += 4)
+    for(int i = 0;i < pack.payload_len; i += 4)
     {
         buffer = GetAddress(pack._payload,i);
         for(int j=0;j<MAX_POTENTIAL_ROUTER;j++)
@@ -393,7 +393,7 @@ void packet_Handler_01(WorkTable * ram, Packet pack)
 void packet_Handler_02(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
 
@@ -419,7 +419,7 @@ void packet_Handler_02(WorkTable * ram, Packet pack)
 void packet_Handler_03(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC)
@@ -438,7 +438,7 @@ void packet_Handler_03(WorkTable * ram, Packet pack)
 void packet_Handler_04(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC)
@@ -454,10 +454,10 @@ void packet_Handler_05(WorkTable * ram, Packet pack)
     {
         if(iter == ram->len_of_list)
         {
-            for(int i = 0; i < pack._plen + 1; i++)
+            for(int i = 0; i < pack.payload_len + 1; i++)
                 ram->many_payload[iter+i] = pack._payload[i];
-            ram->many_payload[iter + pack._plen+1] = '#';
-            ram->len_of_list += pack._plen + 1;
+            ram->many_payload[iter + pack.payload_len + 1] = '#';
+            ram->len_of_list += pack.payload_len + 1;
             break;
         }
     }
@@ -469,7 +469,7 @@ void packet_Handler_06(WorkTable * ram, Packet pack)
         ram->Status = READY;
     else
     {
-        for(int i=0;i<pack._plen;i+=20)
+        for(int i=0;i<pack.payload_len; i+=20)
             if(GetAddress(pack._payload,i) == ram->MAC)
             {
                 ram->Status = READY;

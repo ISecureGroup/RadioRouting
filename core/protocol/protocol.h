@@ -155,7 +155,7 @@ typedef struct  Packet
 
     unsigned short  _reserve;					                             // [2 byte] резервное поле, для доп. функций на будущее
     unsigned char   _payload[MAX_LEN_PAYLOAD];				                 // [100 byte] Передаваемые данные
-    unsigned int    _plen;                                                   // !!моменять название переменной на "payload_len"          // [4 byte] длинна поля данных пакета (передаваемых данных)
+    unsigned int    payload_len;                                             // [4 byte] длинна поля данных пакета (передаваемых данных)
 } Packet;
 
 /**
