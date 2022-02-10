@@ -146,17 +146,21 @@ typedef struct  Packet
     unsigned char   _session;					                             // [1 byte] код сессии (сессия - период работы сети в рамках одной топологии до перестроения)
     unsigned char   _level;						                             // [1 byte] уровень, на котором находится узел (число хопов до шлюза)
     unsigned char   _seance;					                             // [1 byte] код сеанса (сеанс - период работы сети, когда происходит опрос устройств. При сбросе сессии сеанс тоже сбрасывается)
-    unsigned char   _nodestate;					                             // [1 byte] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    unsigned char   _ordernumder;				                                         // [1 byte] number of packet in order
-    unsigned char   _ttl;						                                         // [1 byte] No comments
+    unsigned char   _nodestate;					                             // [1 byte] состояние узла (роутер или оконечное устройство)
+    unsigned char   _ordernumder;				                             // [1 byte] порядковый номер пакета, отправленного устройства
+    unsigned char   _ttl;						                             // [1 byte] оставшееся число ретрансляций пакета
 
-    unsigned long   _nextaddres;				                                         // [4 byte] address of next node
-    unsigned long   _prevaddres;				                                         // [4 byte] address of previous node
+    unsigned long   _nextaddres;				                             // [4 byte] адрес следующего промежуточного узла
+    unsigned long   _prevaddres;				                             // [4 byte] адрес предыдущего узла, отправившего пакет
 
-    unsigned short  _reserve;					                                         // [2 byte] RESERVE
-    unsigned char   _payload[MAX_LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
-    unsigned int    _plen;                                                               // !!моменять название переменной на "payload_len"          // [4 byte] payload length
+    unsigned short  _reserve;					                             // [2 byte] резервное поле, для доп. функций на будущее
+    unsigned char   _payload[MAX_LEN_PAYLOAD];				                 // [100 byte] Передаваемые данные
+    unsigned int    _plen;                                                   // !!моменять название переменной на "payload_len"          // [4 byte] длинна поля данных пакета (передаваемых данных)
 } Packet;
+
+/**
+ * Структура записи таблицы очередей
+ */
 typedef struct  qUnit
 {
     unsigned int    isDelivered;                                                          //ФЛАГ ДОСТАВКИ ПАКЕТА
