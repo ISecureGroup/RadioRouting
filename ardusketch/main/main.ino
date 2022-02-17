@@ -12,17 +12,18 @@
  * @version 1.0
  */
 
-#include "protocol.h"
+#include "protocol.hpp"
 
 unsigned char OutPacket[128];
 unsigned char InPacket[128];
 unsigned char SensorData[128];
+WorkTable       RAM;                                        //Память, выделяемая под логику протокола
+int             RSSI;                                       //Значение урвня принятого сигнала
 /**
  * Функция выполняющаяся при запуске микроконтроллера. Служит для первоначальной инициализации переменных.
  */
-
-void start(){
-    StartInitProtocol();
+void setup(){
+    StartInitProtocol(&RAM);
 }
 /**
  * Функция, в которой сосредоточена основная логика работы устройства. Данная функция выполняется в бесконечном цикле,

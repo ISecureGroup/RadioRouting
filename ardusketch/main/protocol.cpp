@@ -1,7 +1,9 @@
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <Arduino.h>
 #include <time.h>
-#include "protocol.h"
+#include "protocol.hpp"
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
 Packet          ParseHeader(const unsigned char *stream)
 {
@@ -69,7 +71,7 @@ unsigned char   Validator(WorkTable * ram, Packet pack){
 }
 void            StatusController(WorkTable * ram){
 
-    ram->delta_time = clock()/CLOCKS_PER_SEC - ram->start_status_time;
+    ram->delta_time = millis() - ram->start_status_time;
 
     switch (ram->Status)
     {
@@ -179,7 +181,7 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
 unsigned long GetRandomAddress()
 {
     unsigned long address;
-    unsigned char buff[4];
+     char buff[4];
     while(1){
         srand(time(NULL));
         address = rand();
@@ -342,12 +344,12 @@ void ServiceFieldAdding(WorkTable *ram,Packet pack)
     ram->my_seance      = pack._seance;
     ram->my_time        = pack._synctime;
 }
-void StartInitProtocol()
+void StartInitProtocol(WorkTable *ram)
 {
-    RAM.MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
-    RAM.Status = SLEEP;                                     // Первоначальное состояние устройства
-    RAM.Device = GATEWAY;
-    RAM.start_status_time = clock()/CLOCKS_PER_SEC;
+    ram->MAC = GetRandomAddress();                           // MAC-адрес устройства, в дальнейшем будет случайным
+    ram->Status = SLEEP;                                     // Первоначальное состояние устройства
+    ram->Device = GATEWAY;
+    ram->start_status_time = millis();
 }
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
