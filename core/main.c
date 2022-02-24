@@ -18,13 +18,16 @@
 #include "../tests/paxample.h"
 #include "../tests/showme.h"
 
+WorkTable       RAM;                                        //Память, выделяемая под логику протокола
+int             RSSI;                                       //Значение урвня принятого сигнала
 /**
  * Функция выполняющаяся при запуске микроконтроллера. Служит для первоначальной инициализации переменных.
  */
 unsigned char OutPacket[128];
+unsigned char InPacket[128];
 
-void start(){
-    StartInitProtocol();
+void setup(){
+    StartInitProtocol(&RAM);
 }
 /**
  * Функция, в которой сосредоточена основная логика работы устройства. Данная функция выполняется в бесконечном цикле,
@@ -32,7 +35,13 @@ void start(){
  */
 void loop()
 {
-        // В SLEEP
+    //Serial.readByteUntill()
+    if(PacketManager(SensorData_0, 200, &RAM, PacketType0_1,OutPacket))
+    {
+        //Serial.write(OutPacket)
+    }
+
+/**        // В SLEEP
         ShowRAMTable(&RAM);
         PacketManager(SensorData_0, 200, &RAM, PacketType0_1,OutPacket);
         PacketManager(SensorData_0, 300, &RAM, PacketType0_2,OutPacket);
@@ -79,14 +88,14 @@ void loop()
         Sleep(7000);
         ShowRAMTable(&RAM);
         Sleep(555555);
-
+*/
 }
 /**
  * Функция, которая служит точкой входа в приложение.
  */
 int  main() {
     system("chcp 65001");
-    start();
+    setup();
     while(1)
        loop();
 }

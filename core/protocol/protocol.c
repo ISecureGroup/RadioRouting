@@ -145,11 +145,10 @@ void            QueueManager(WorkTable *ram)
 {
 }
 /////////////////////МЕНЕДЖЕР//////////////////////////////////
-void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream)
+int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream)
 {
 
     Packet buffer = ParseHeader(instream);
-    PrintPacketLine("->",buffer);
     //------------Обработчики-----------------
     switch(Validator(ram, buffer))
     {
@@ -168,14 +167,14 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     //--------------Фабрики-------------------
     switch(ram->Status)
     {
-        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               break;
-        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   break;
-        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       break;
-        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    break;
-        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    break;
+        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               Queue_up(ram,1,0, ram->output_packet);  return 1;
+        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   Queue_up(ram,1,0, ram->output_packet);  return 1;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       Queue_up(ram,1,0, ram->output_packet);  return 1;
+        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    Queue_up(ram,1,0, ram->output_packet);  return 1;
+        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    Queue_up(ram,1,0, ram->output_packet);  return 1;
     }
     //---------Менеджер очередей--------------
-    QueueManager(ram);
+
 }
 /////////////////////////ИНСТРУМЕНТЫ////////////////////////////
 unsigned long GetRandomAddress()
@@ -345,12 +344,12 @@ void ServiceFieldAdding(WorkTable *ram,Packet pack)
     ram->my_seance      = pack._seance;
     ram->my_time        = pack._synctime;
 }
-void StartInitProtocol()
+void StartInitProtocol(WorkTable * ram)
 {
-    RAM.MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
-    RAM.Status = SLEEP;                                     // Первоначальное состояние устройства
-    RAM.Device = GATEWAY;
-    RAM.start_status_time = clock()/CLOCKS_PER_SEC;
+    ram->MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
+    ram->Status = SLEEP;                                     // Первоначальное состояние устройства
+    ram->Device = GATEWAY;
+    ram->start_status_time = clock()/CLOCKS_PER_SEC;
 }
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)

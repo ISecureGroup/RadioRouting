@@ -213,7 +213,7 @@ typedef struct  WorkTable
     unsigned long   start_status_time;
 } WorkTable;
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
-void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream);
+int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
 Packet          ParseHeader(const unsigned char *stream);
 unsigned char   Validator(WorkTable * ram, Packet pack);
@@ -245,7 +245,7 @@ int             isTimeout(WorkTable *ram, unsigned int delay);
 void            SetDefault(WorkTable *ram);
 void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДРУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
-void            StartInitProtocol();
+void            StartInitProtocol(WorkTable *ram);
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void 			packet_Handler_00(WorkTable * ram, Packet pack, int RSSI);                                                  //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void			packet_Handler_01(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
@@ -262,8 +262,5 @@ void            packet_Factory_03(WorkTable * ram);                             
 void            packet_Factory_04(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
 void            packet_Factory_05(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
 void            packet_Factory_06(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
-////////////////////////////ПЕРЕМЕННЫЕ/////////////////////////
-WorkTable       RAM;                                        //Память, выделяемая под логику протокола
-int             RSSI;                                       //Значение урвня принятого сигнала
-///////////////////////////////////////////////////////////////
+
 #endif //RADIOROUTING_PROTOCOL_H
