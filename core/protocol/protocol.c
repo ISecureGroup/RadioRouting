@@ -4,7 +4,7 @@
 #include "protocol.h"
 #include "../../tests/showme.h"
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParseHeader(const unsigned char *stream)
+Packet          ParsePacket(const unsigned char *stream)
 {
 
     Packet 				buffer;
@@ -41,11 +41,54 @@ Packet          ParseHeader(const unsigned char *stream)
     buffer._synctime            =((adr_buff + stream[10])<<8) + stream[11];	adr_buff = 0;
     buffer._reserve             =((adr_buff + stream[26])<<8) + stream[27];   adr_buff = 0;
 
-    for(int iter = 28;iter<=len;iter++)
+    for(int iter = 28;iter <= len;iter++)
     {
         buffer._payload[iter - 28] = stream[iter];
     }
     return buffer;
+}
+void            UnParsePacket(Packet pack,unsigned char *outstream, int lenght)
+{
+    outstream[0] = pack._startpacket;
+    outstream[1] = pack._typepacket;
+    outstream[12] = pack._level;
+    outstream[13] = pack._session;
+    outstream[14] = pack._seance;
+    outstream[15] = pack._nodestate;
+    outstream[16] = pack._ordernumder;
+    outstream[17] = pack._ttl;
+
+    outstream[2] = pack._sourceaddres;
+    outstream[3] = pack._sourceaddres;
+    outstream[4] = pack._sourceaddres;
+    outstream[5] = pack._sourceaddres;
+
+    outstream[6] = pack._destinationaddres;
+    outstream[7] = pack._destinationaddres;
+    outstream[8] = pack._destinationaddres;
+    outstream[9] = pack._destinationaddres;
+
+    outstream[18] = pack._nextaddres;
+    outstream[19] = pack._nextaddres;
+    outstream[20] = pack._nextaddres;
+    outstream[21] = pack._nextaddres;
+
+    outstream[22] = pack._prevaddres;
+    outstream[23] = pack._prevaddres;
+    outstream[24] = pack._prevaddres;
+    outstream[25] = pack._prevaddres;
+
+    outstream[10] = pack._prevaddres;
+    outstream[11] = pack._prevaddres;
+
+    outstream[26] = pack._prevaddres;
+    outstream[27] = pack._prevaddres;
+
+    for(int iter = 28;iter<=lenght;iter++)
+    {
+        outstream[iter]; pack._payload[iter-28];
+    }
+
 }
 unsigned char   Validator(WorkTable * ram, Packet pack){
 
@@ -141,14 +184,15 @@ void            StatusController(WorkTable * ram){
             //////////////////////////////////////////////////////////////////////////
     }
 }
-void            QueueManager(WorkTable *ram)
-{
-}
-/////////////////////МЕНЕДЖЕР//////////////////////////////////
-int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream)
+int             QueueManager(unsigned char *outstream, WorkTable *ram)
 {
 
-    Packet buffer = ParseHeader(instream);
+}
+/////////////////////МЕНЕДЖЕР//////////////////////////////////
+int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream, int len)
+{
+
+    Packet buffer = ParsePacket(instream);
     //------------Обработчики-----------------
     switch(Validator(ram, buffer))
     {
@@ -167,14 +211,15 @@ int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *
     //--------------Фабрики-------------------
     switch(ram->Status)
     {
-        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               Queue_up(ram,1,0, ram->output_packet);  return 1;
-        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   Queue_up(ram,1,0, ram->output_packet);  return 1;
-        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       Queue_up(ram,1,0, ram->output_packet);  return 1;
-        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    Queue_up(ram,1,0, ram->output_packet);  return 1;
-        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    Queue_up(ram,1,0, ram->output_packet);  return 1;
+        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               Queue_up(ram,1,0, ram->output_packet);  break;
+        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   Queue_up(ram,1,0, ram->output_packet);  break;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       Queue_up(ram,1,0, ram->output_packet);  break;
+        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    Queue_up(ram,1,0, ram->output_packet);  break;
+        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    Queue_up(ram,1,0, ram->output_packet);  break;
     }
-    //---------Менеджер очередей--------------
 
+    //---------Менеджер очередей--------------
+    return QueueManager(outstream,ram);
 }
 /////////////////////////ИНСТРУМЕНТЫ////////////////////////////
 unsigned long GetRandomAddress()

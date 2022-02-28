@@ -12,7 +12,7 @@
  *                         Менеджер пакетов устанавливает порядок и условия запуска вспомогательных модулей,
  *                         обеспечивающих взаимодействия данного устройства с сетью, работающей на базе _Протокола_;
  *
- *  3) Парсер заголовков входящих пакетов (ParseHeader) - вспомогательный модуль, который представляет собой функцию,
+ *  3) Парсер заголовков входящих пакетов (ParsePacket) - вспомогательный модуль, который представляет собой функцию,
  *                                                        извлекающей из байтового массива поля заголовка пакетов и
  *                                                        помещает их в специальную структуру типа Packet;
  *
@@ -66,6 +66,7 @@
  */
 #define     HEADER_LEN                                                      28
 #define     MAX_LEN_PAYLOAD                                                 100
+#define     FULL_PACKET_LENGHT                                              128
 
 /**
  * Размеры заголовка и полезной нагрузки(содержимого) пакета
@@ -130,7 +131,6 @@ typedef struct  UpRouter
     unsigned long address;
 
 } UpRouter;
-
 /**
  * Структура пакетов, определяемая _Протоколом_
  */
@@ -157,7 +157,6 @@ typedef struct  Packet
     unsigned char   _payload[MAX_LEN_PAYLOAD];				                 // [100 byte] Передаваемые данные
     unsigned int    payload_len;                                             // [4 byte] длинна поля данных пакета (передаваемых данных)
 } Packet;
-
 /**
  * Структура записи таблицы очередей
  */
@@ -213,12 +212,13 @@ typedef struct  WorkTable
     unsigned long   start_status_time;
 } WorkTable;
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
-int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream);
+int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream, int len);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParseHeader(const unsigned char *stream);
+Packet          ParsePacket(const unsigned char *stream);
+void            UnParsePacket(Packet pack,unsigned char *outstream, int lenght);
 unsigned char   Validator(WorkTable * ram, Packet pack);
 void            StatusController(WorkTable * ram);
-void            QueueManager(WorkTable *ram);
+int            QueueManager(unsigned char *outstream, WorkTable *ram);
 /////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
 unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);

@@ -23,8 +23,8 @@ int             RSSI;                                       //Значение �
 /**
  * Функция выполняющаяся при запуске микроконтроллера. Служит для первоначальной инициализации переменных.
  */
-unsigned char OutPacket[128];
-unsigned char InPacket[128];
+unsigned char OutPacket[FULL_PACKET_LENGHT];
+unsigned char InPacket[FULL_PACKET_LENGHT];
 
 void setup(){
     StartInitProtocol(&RAM);
@@ -36,7 +36,7 @@ void setup(){
 void loop()
 {
     //Serial.readByteUntill()
-    if(PacketManager(SensorData_0, 200, &RAM, PacketType0_1,OutPacket))
+    if(PacketManager(SensorData_0, RSSI, &RAM, PacketType0_1,OutPacket,FULL_PACKET_LENGHT))
     {
         //Serial.write(OutPacket)
     }
