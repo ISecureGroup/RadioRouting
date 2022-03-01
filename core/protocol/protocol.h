@@ -84,7 +84,6 @@
 #define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             5
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  5
 
-
 //---------------------------------------------РАБОЧИЕ ПОЛЯ-------------------------------------------------------------
 
 /**
@@ -215,7 +214,6 @@ typedef struct  WorkTable
 int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream, int len);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
 Packet          ParsePacket(const unsigned char *stream);
-void            UnParsePacket(Packet pack,unsigned char *outstream, int lenght);
 unsigned char   Validator(WorkTable * ram, Packet pack);
 void            StatusController(WorkTable * ram);
 int            QueueManager(unsigned char *outstream, WorkTable *ram);
@@ -224,6 +222,7 @@ unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            GetAddressChar(char * buff, unsigned long stream);
 void            packetConstructor(WorkTable *ram,
+                                  unsigned char *outstream,
                                   unsigned char _startpacket,
                                   unsigned char _typepacket,
                                   unsigned long _sourceaddres,
@@ -255,12 +254,12 @@ void 			packet_Handler_04(WorkTable * ram, Packet pack);                        
 void 			packet_Handler_05(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
 void 			packet_Handler_06(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 /////////////////////////ФАБРИКИ////////////////////////////////
-void            packet_Factory_00(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void            packet_Factory_01(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void            packet_Factory_02(WorkTable * ram);                                                                       	//ФАБРИКА ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
-void            packet_Factory_03(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я РОУТЕР"
-void            packet_Factory_04(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
-void            packet_Factory_05(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
-void            packet_Factory_06(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
+void            packet_Factory_00(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void            packet_Factory_01(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void            packet_Factory_02(unsigned char *outstream,int len,WorkTable * ram);                                                                       	//ФАБРИКА ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
+void            packet_Factory_03(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я РОУТЕР"
+void            packet_Factory_04(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
+void            packet_Factory_05(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
+void            packet_Factory_06(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 
 #endif //RADIOROUTING_PROTOCOL_H
