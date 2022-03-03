@@ -164,7 +164,7 @@ typedef struct  qUnit
     unsigned int    isDelivered;                                                          //ФЛАГ ДОСТАВКИ ПАКЕТА
     unsigned short  time_to_send;                                                         //ВРЕМЯ ЖИЗНИ ПАКЕТА В ОЧЕРЕДИ
     unsigned int    repeat;                                                               //КОЛИЧЕСТВО ПОВТОРЕНИЙ
-    Packet          q_packet;                                                             //САМ ПАКЕТ В ОЧЕРЕДИ
+    unsigned char   q_packet[FULL_PACKET_LENGHT];                                         //САМ ПАКЕТ В ОЧЕРЕДИ
 } qUnit;
 typedef struct  RouteUnit
 {
@@ -201,7 +201,7 @@ typedef struct  WorkTable
     UpRouter  my_routers[2];
     unsigned long   i_reserve_router_for[MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER];
     unsigned long   i_main_router_for[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];
-    Packet          output_packet;
+    unsigned char   charPacketBuffer[FULL_PACKET_LENGHT];
     unsigned char   output_payload[MAX_LEN_PAYLOAD];
 
     /////////////   ВРЕМЯ И ОЧЕРЕДЬ
@@ -222,7 +222,6 @@ unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            GetAddressChar(char * buff, unsigned long stream);
 void            packetConstructor(WorkTable *ram,
-                                  unsigned char *outstream,
                                   unsigned char _startpacket,
                                   unsigned char _typepacket,
                                   unsigned long _sourceaddres,
@@ -242,7 +241,7 @@ void            packetConstructor(WorkTable *ram,
 void            DefiningRouters(WorkTable *ram);
 int             isTimeout(WorkTable *ram, unsigned int delay);
 void            SetDefault(WorkTable *ram);
-void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
+void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДРУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
 void            StartInitProtocol(WorkTable *ram);
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
@@ -254,12 +253,12 @@ void 			packet_Handler_04(WorkTable * ram, Packet pack);                        
 void 			packet_Handler_05(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
 void 			packet_Handler_06(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 /////////////////////////ФАБРИКИ////////////////////////////////
-void            packet_Factory_00(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void            packet_Factory_01(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
-void            packet_Factory_02(unsigned char *outstream,int len,WorkTable * ram);                                                                       	//ФАБРИКА ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
-void            packet_Factory_03(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я РОУТЕР"
-void            packet_Factory_04(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
-void            packet_Factory_05(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
-void            packet_Factory_06(unsigned char *outstream,int len,WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
+void            packet_Factory_00(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void            packet_Factory_01(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
+void            packet_Factory_02(WorkTable * ram);                                                                       	//ФАБРИКА ПАКЕТА "Я ВЫБРАЛ РОУТЕР"
+void            packet_Factory_03(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "Я РОУТЕР"
+void            packet_Factory_04(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
+void            packet_Factory_05(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
+void            packet_Factory_06(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
 
 #endif //RADIOROUTING_PROTOCOL_H
