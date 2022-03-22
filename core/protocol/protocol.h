@@ -12,7 +12,7 @@
  *                         Менеджер пакетов устанавливает порядок и условия запуска вспомогательных модулей,
  *                         обеспечивающих взаимодействия данного устройства с сетью, работающей на базе _Протокола_;
  *
- *  3) Парсер заголовков входящих пакетов (ParseHeader) - вспомогательный модуль, который представляет собой функцию,
+ *  3) Парсер заголовков входящих пакетов (ParsePacket) - вспомогательный модуль, который представляет собой функцию,
  *                                                        извлекающей из байтового массива поля заголовка пакетов и
  *                                                        помещает их в специальную структуру типа Packet;
  *
@@ -66,6 +66,7 @@
  */
 #define     HEADER_LEN                                                      28
 #define     MAX_LEN_PAYLOAD                                                 100
+#define     FULL_PACKET_LENGHT                                              128
 
 /**
  * Размеры заголовка и полезной нагрузки(содержимого) пакета
@@ -82,7 +83,6 @@
 #define     DELAY_OF_ANNOUNCEMENT_POTENTIAL_ROUTER_STATUS                   5
 #define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             5
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  5
-
 
 //---------------------------------------------РАБОЧИЕ ПОЛЯ-------------------------------------------------------------
 
@@ -130,7 +130,6 @@ typedef struct  UpRouter
     unsigned long address;
 
 } UpRouter;
-
 /**
  * Структура пакетов, определяемая _Протоколом_
  */
@@ -146,23 +145,26 @@ typedef struct  Packet
     unsigned char   _session;					                             // [1 byte] код сессии (сессия - период работы сети в рамках одной топологии до перестроения)
     unsigned char   _level;						                             // [1 byte] уровень, на котором находится узел (число хопов до шлюза)
     unsigned char   _seance;					                             // [1 byte] код сеанса (сеанс - период работы сети, когда происходит опрос устройств. При сбросе сессии сеанс тоже сбрасывается)
-    unsigned char   _nodestate;					                             // [1 byte] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    unsigned char   _ordernumder;				                                         // [1 byte] number of packet in order
-    unsigned char   _ttl;						                                         // [1 byte] No comments
+    unsigned char   _nodestate;					                             // [1 byte] состояние узла (роутер или оконечное устройство)
+    unsigned char   _ordernumder;				                             // [1 byte] порядковый номер пакета, отправленного устройства
+    unsigned char   _ttl;						                             // [1 byte] оставшееся число ретрансляций пакета
 
-    unsigned long   _nextaddres;				                                         // [4 byte] address of next node
-    unsigned long   _prevaddres;				                                         // [4 byte] address of previous node
+    unsigned long   _nextaddres;				                             // [4 byte] адрес следующего промежуточного узла
+    unsigned long   _prevaddres;				                             // [4 byte] адрес предыдущего узла, отправившего пакет
 
-    unsigned short  _reserve;					                                         // [2 byte] RESERVE
-    unsigned char   _payload[MAX_LEN_PAYLOAD];				                                 // [100 byte] Payload. End of payload must be sym. #
-    unsigned int    _plen;                                                               // !!моменять название переменной на "payload_len"          // [4 byte] payload length
+    unsigned short  _reserve;					                             // [2 byte] резервное поле, для доп. функций на будущее
+    unsigned char   _payload[MAX_LEN_PAYLOAD];				                 // [100 byte] Передаваемые данные
+    unsigned int    payload_len;                                             // [4 byte] длинна поля данных пакета (передаваемых данных)
 } Packet;
+/**
+ * Структура записи таблицы очередей
+ */
 typedef struct  qUnit
 {
     unsigned int    isDelivered;                                                          //ФЛАГ ДОСТАВКИ ПАКЕТА
     unsigned short  time_to_send;                                                         //ВРЕМЯ ЖИЗНИ ПАКЕТА В ОЧЕРЕДИ
     unsigned int    repeat;                                                               //КОЛИЧЕСТВО ПОВТОРЕНИЙ
-    Packet          q_packet;                                                             //САМ ПАКЕТ В ОЧЕРЕДИ
+    unsigned char   q_packet[FULL_PACKET_LENGHT];                                         //САМ ПАКЕТ В ОЧЕРЕДИ
 } qUnit;
 typedef struct  RouteUnit
 {
@@ -199,7 +201,7 @@ typedef struct  WorkTable
     UpRouter  my_routers[2];
     unsigned long   i_reserve_router_for[MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER];
     unsigned long   i_main_router_for[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];
-    Packet          output_packet;
+    unsigned char   charPacketBuffer[FULL_PACKET_LENGHT];
     unsigned char   output_payload[MAX_LEN_PAYLOAD];
 
     /////////////   ВРЕМЯ И ОЧЕРЕДЬ
@@ -209,12 +211,12 @@ typedef struct  WorkTable
     unsigned long   start_status_time;
 } WorkTable;
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
-void            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *stream);
+int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream, int len);
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParseHeader(const unsigned char *stream);
+Packet          ParsePacket(const unsigned char *stream);
 unsigned char   Validator(WorkTable * ram, Packet pack);
 void            StatusController(WorkTable * ram);
-void            QueueManager(WorkTable *ram);
+int            QueueManager(unsigned char *outstream, WorkTable *ram);
 /////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
 unsigned long   GetRandomAddress();
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
@@ -239,8 +241,9 @@ void            packetConstructor(WorkTable *ram,
 void            DefiningRouters(WorkTable *ram);
 int             isTimeout(WorkTable *ram, unsigned int delay);
 void            SetDefault(WorkTable *ram);
-void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
+void            Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send);                     //ВСТАТЬ В ОЧЕРЕДЬ//СБРОС УСТРОЙСТВА
 void            ServiceFieldAdding(WorkTable *ram,Packet pack);                                                             //РАБОТА С ДРУГИМИ СЕРВИСНЫМИ ПОЛЯМИ ЗАГОЛОВКА
+void            StartInitProtocol(WorkTable *ram);
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void 			packet_Handler_00(WorkTable * ram, Packet pack, int RSSI);                                                  //ОБРАБОТЧИК ПАКЕТА "Я ПОТЕНЦИАЛЬНЫЙ РОУТЕР"
 void			packet_Handler_01(WorkTable * ram, Packet pack);                                                            //ОБРАБОТЧИК ПАКЕТА "Я УЗЕЛ"
@@ -257,8 +260,5 @@ void            packet_Factory_03(WorkTable * ram);                             
 void            packet_Factory_04(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОПРОС УСТРОЙСТВ"
 void            packet_Factory_05(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА УНО"
 void            packet_Factory_06(WorkTable * ram);                                                                         //ФАБРИКА ПАКЕТА "ОТВЕТ ОТ УСТРОЙСТВА МЕНИ"
-////////////////////////////ПЕРЕМЕННЫЕ/////////////////////////
-WorkTable       RAM;                                        //Память, выделяемая под логику протокола
-int             RSSI;                                       //Значение урвня принятого сигнала
-///////////////////////////////////////////////////////////////
+
 #endif //RADIOROUTING_PROTOCOL_H

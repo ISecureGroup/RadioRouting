@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "protocol.h"
 #include "../../tests/showme.h"
 ///////////////ОСНОВНЫЕ ПРОЦЕДУРЫ МЕНЕДЖЕРА/////////////////////
-Packet          ParseHeader(const unsigned char *stream)
+Packet          ParsePacket(const unsigned char *stream)
 {
 
     Packet 				buffer;
@@ -22,7 +23,7 @@ Packet          ParseHeader(const unsigned char *stream)
         return buffer;
     }
 
-    buffer._plen          = len - HEADER_LEN-1;
+    buffer.payload_len          = len - HEADER_LEN - 1;
     buffer._startpacket   = stream[0];
     buffer._typepacket    = stream[1];
     buffer._level         = stream[12];
@@ -41,7 +42,7 @@ Packet          ParseHeader(const unsigned char *stream)
     buffer._synctime            =((adr_buff + stream[10])<<8) + stream[11];	adr_buff = 0;
     buffer._reserve             =((adr_buff + stream[26])<<8) + stream[27];   adr_buff = 0;
 
-    for(int iter = 28;iter<=len;iter++)
+    for(int iter = 28;iter <= len;iter++)
     {
         buffer._payload[iter - 28] = stream[iter];
     }
@@ -141,15 +142,19 @@ void            StatusController(WorkTable * ram){
             //////////////////////////////////////////////////////////////////////////
     }
 }
-void            QueueManager(WorkTable *ram)
+int             QueueManager(unsigned char *outstream, WorkTable *ram)
 {
+    if(1)
+    {
+        strcpy(outstream,ram->charPacketBuffer);
+        return 1;
+    }
 }
 /////////////////////МЕНЕДЖЕР//////////////////////////////////
-void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *stream)
+int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream, int len)
 {
 
-    Packet buffer = ParseHeader(stream);
-    PrintPacketLine("->",buffer);
+    Packet buffer = ParsePacket(instream);
     //------------Обработчики-----------------
     switch(Validator(ram, buffer))
     {
@@ -168,16 +173,17 @@ void PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char 
     //--------------Фабрики-------------------
     switch(ram->Status)
     {
-        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;               break;
-        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                   break;
-        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                       break;
-        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;    break;
-        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                    break;
+        case SEND_00:	packet_Factory_00(ram);	ram->Status = WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;                   Queue_up(ram,1,0);  break;
+        case SEND_01:   packet_Factory_01(ram);	ram->Status = START_DEFINING_ROUTERS;                                       Queue_up(ram,1,0);  break;
+        case SEND_02:   packet_Factory_02(ram);	ram->Status = WAIT_CONFIRM_FROM_POTENTIAL_ROUTER;                           Queue_up(ram,1,0);  break;
+        case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;        Queue_up(ram,1,0);  break;
+        case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                        Queue_up(ram,1,0);  break;
     }
+
     //---------Менеджер очередей--------------
-    QueueManager(ram);
+    return QueueManager(outstream,ram);
 }
-/////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
+/////////////////////////ИНСТРУМЕНТЫ////////////////////////////
 unsigned long GetRandomAddress()
 {
     unsigned long address;
@@ -205,8 +211,8 @@ void GetAddressChar(char* buff, unsigned long stream)
 void packetConstructor(WorkTable *ram,
                        unsigned char _startpacket,
                        unsigned char _typepacket,
-                       unsigned long _sourceaddres
-                       ,unsigned long _destinationaddres,
+                       unsigned long _sourceaddres,
+                       unsigned long _destinationaddres,
                        unsigned short _synctime,
                        unsigned char _level,
                        unsigned char _session,
@@ -219,34 +225,56 @@ void packetConstructor(WorkTable *ram,
                        unsigned short _reserve,
                        const unsigned char *_payload)
 {
-    for(int i=0; i < MAX_LEN_PAYLOAD; i++)
-        ram->output_packet._payload[i] = 0;
+    for(int i = 0; i < FULL_PACKET_LENGHT; i++)
+    {
+        ram->charPacketBuffer[i] = 0;
+    }
+    //Служебные поля
+    ram->charPacketBuffer[0] = _startpacket;
+    ram->charPacketBuffer[1] = _typepacket;
+    ram->charPacketBuffer[12] = _level;
+    ram->charPacketBuffer[13] = _session;
+    ram->charPacketBuffer[14] = _seance;
+    ram->charPacketBuffer[15] = _nodestate;
+    ram->charPacketBuffer[16] = _ordernumder;
+    ram->charPacketBuffer[17] = _ttl;
+    //Адрес источника
+    ram->charPacketBuffer[2] = _sourceaddres >> 24;
+    ram->charPacketBuffer[3] = (_sourceaddres >> 16) & 255;
+    ram->charPacketBuffer[4] = (_sourceaddres >> 8) & 255;
+    ram->charPacketBuffer[5] = _sourceaddres & 255;
+    //Адрес получателя
+    ram->charPacketBuffer[6] = _destinationaddres >> 24;
+    ram->charPacketBuffer[7] = (_destinationaddres >> 16) & 255;
+    ram->charPacketBuffer[8] = (_destinationaddres >> 8) & 255;
+    ram->charPacketBuffer[9] = _destinationaddres & 255;
+    //Следущий адрес
+    ram->charPacketBuffer[18] = _nextaddres >> 24;
+    ram->charPacketBuffer[19] = (_nextaddres >> 16) & 255;
+    ram->charPacketBuffer[20] = (_nextaddres >> 8) & 255;
+    ram->charPacketBuffer[21] = _nextaddres & 255;
+    //Предыдущий адрес
+    ram->charPacketBuffer[22] = _prevaddres >> 24;
+    ram->charPacketBuffer[23] = (_prevaddres >> 16) & 255;;
+    ram->charPacketBuffer[24] = (_prevaddres >> 8) & 255;
+    ram->charPacketBuffer[25] = _prevaddres & 255;
+    //Время
+    ram->charPacketBuffer[10] = _synctime >> 8;
+    ram->charPacketBuffer[11] = _synctime & 255;
+    //Резервное поле
+    ram->charPacketBuffer[26] = _reserve >> 8;
+    ram->charPacketBuffer[27] = _reserve & 255;
+    //Нагрузка
 
-    ram->output_packet._startpacket         = _startpacket;
-    ram->output_packet._typepacket          = _typepacket;
-    ram->output_packet._sourceaddres        = _sourceaddres;
-    ram->output_packet._destinationaddres   = _destinationaddres;
-    ram->output_packet._synctime            = _synctime;
-    ram->output_packet._session             = _session;
-    ram->output_packet._level               = _level;
-    ram->output_packet._seance              = _seance;
-    ram->output_packet._nodestate           = _nodestate;
-    ram->output_packet._ordernumder         = _ordernumder;
-    ram->output_packet._ttl                 = _ttl;
-    ram->output_packet._nextaddres          = _nextaddres;
-    ram->output_packet._prevaddres          = _prevaddres;
-    ram->output_packet._reserve             = _reserve;
-
-    for(int i=0;i<100;i++)
+    for(int i=28;i<FULL_PACKET_LENGHT;i++)
     {
         if(_payload[i]!='#')
-            ram->output_packet._payload[i] = _payload[i];
+            ram->charPacketBuffer[i] = _payload[i];
         else {
-            ram->output_packet._payload[i] = '#';
+            ram->charPacketBuffer[i] = '#';
             break;
         }
     }
-    PrintPacketLine("<-", ram->output_packet);
 }
 ///////////////////////РАБОЧИЕ АЛГОРИТМЫ/////////////////////////
 void DefiningRouters(WorkTable *ram)
@@ -324,19 +352,17 @@ void SetDefault(WorkTable *ram)
     ram->gateway      = 0;
     ram->temporary_prev_address = 0;
 }
-void Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send, Packet exmpl){
+void Queue_up(WorkTable *ram, unsigned int repeat, unsigned int time_to_send){
 
     for(int i = 0; i < 4; i++)
     {
-        ram->QUEUE[i].isDelivered      = ram->QUEUE[i+1].isDelivered;
-        ram->QUEUE[i].repeat           = ram->QUEUE[i+1].repeat;
-        ram->QUEUE[i].time_to_send     = ram->QUEUE[i+1].time_to_send;
-        ram->QUEUE[i].q_packet         = ram->QUEUE[i+1].q_packet;
+        ram->QUEUE[i] = ram->QUEUE[i+1];
     }
     ram->QUEUE[4].isDelivered      = 0;
     ram->QUEUE[4].repeat           = repeat;
     ram->QUEUE[4].time_to_send     = time_to_send;
-    ram->QUEUE[4].q_packet         = exmpl;
+    for(int i=0;i<FULL_PACKET_LENGHT;i++)
+        ram->QUEUE[4].q_packet[i] =ram->charPacketBuffer[i];
 }
 void ServiceFieldAdding(WorkTable *ram,Packet pack)
 {
@@ -344,6 +370,13 @@ void ServiceFieldAdding(WorkTable *ram,Packet pack)
     ram->my_level       = pack._level + 1;
     ram->my_seance      = pack._seance;
     ram->my_time        = pack._synctime;
+}
+void StartInitProtocol(WorkTable * ram)
+{
+    ram->MAC = 0x69696969; //GetRandomAddress();             // MAC-адрес устройства, в дальнейшем будет случайным
+    ram->Status = SLEEP;                                     // Первоначальное состояние устройства
+    ram->Device = GATEWAY;
+    ram->start_status_time = clock()/CLOCKS_PER_SEC;
 }
 /////////////////////////ОБРАБОТЧИКИ/////////////////////////////
 void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
@@ -363,7 +396,7 @@ void packet_Handler_00(WorkTable * ram, Packet pack, int RSSI)
 void packet_Handler_01(WorkTable * ram, Packet pack)
 {
     unsigned long buffer;
-    for(int i = 0;i < pack._plen;i += 4)
+    for(int i = 0;i < pack.payload_len; i += 4)
     {
         buffer = GetAddress(pack._payload,i);
         for(int j=0;j<MAX_POTENTIAL_ROUTER;j++)
@@ -386,7 +419,7 @@ void packet_Handler_01(WorkTable * ram, Packet pack)
 void packet_Handler_02(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
 
@@ -412,7 +445,7 @@ void packet_Handler_02(WorkTable * ram, Packet pack)
 void packet_Handler_03(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC)
@@ -431,7 +464,7 @@ void packet_Handler_03(WorkTable * ram, Packet pack)
 void packet_Handler_04(WorkTable * ram, Packet pack)
 {
     unsigned long 	buffer;
-    for(int i=0;i<pack._plen;i+=4)
+    for(int i=0;i<pack.payload_len; i+=4)
     {
         buffer = GetAddress(pack._payload,i);
         if(buffer == ram->MAC)
@@ -447,10 +480,10 @@ void packet_Handler_05(WorkTable * ram, Packet pack)
     {
         if(iter == ram->len_of_list)
         {
-            for(int i = 0; i < pack._plen + 1; i++)
+            for(int i = 0; i < pack.payload_len + 1; i++)
                 ram->many_payload[iter+i] = pack._payload[i];
-            ram->many_payload[iter + pack._plen+1] = '#';
-            ram->len_of_list += pack._plen + 1;
+            ram->many_payload[iter + pack.payload_len + 1] = '#';
+            ram->len_of_list += pack.payload_len + 1;
             break;
         }
     }
@@ -462,7 +495,7 @@ void packet_Handler_06(WorkTable * ram, Packet pack)
         ram->Status = READY;
     else
     {
-        for(int i=0;i<pack._plen;i+=20)
+        for(int i=0;i<pack.payload_len; i+=20)
             if(GetAddress(pack._payload,i) == ram->MAC)
             {
                 ram->Status = READY;
