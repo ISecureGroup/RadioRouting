@@ -150,6 +150,17 @@ int             QueueManager(unsigned char *outstream, WorkTable *ram)
         return 1;
     }
 }
+int             UpdateObserver(WorkTable *ram)
+{
+    char buff[4];
+    WriteToMassive(ram->ObserverString,0,"OBSERVER|",9);
+    WriteToMassive(ram->ObserverString,9,"MAC:",4);     GetAddressChar(buff,ram->MAC);
+    WriteToMassive(ram->ObserverString,13,buff,4);
+    WriteToMassive(ram->ObserverString,17,"|STT:",5);
+    WriteToMassive(ram->ObserverString,22,(char)ram->Status,1);
+
+
+}
 /////////////////////МЕНЕДЖЕР//////////////////////////////////
 int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *instream, unsigned char *outstream, int len)
 {
@@ -179,7 +190,7 @@ int PacketManager(unsigned char *sens, int RSSI, WorkTable *ram, unsigned char *
         case SEND_03:   packet_Factory_03(ram); ram->Status = ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES;        Queue_up(ram,1,0);  break;
         case SEND_03A:  packet_Factory_03(ram); ram->Status = READY;                                                        Queue_up(ram,1,0);  break;
     }
-
+    UpdateObserver(ram);
     //---------Менеджер очередей--------------
     return QueueManager(outstream,ram);
 }
@@ -194,6 +205,19 @@ unsigned long GetRandomAddress()
         GetAddressChar(buff,address);
         if(buff[0] !='#' && buff[1] !='#' && buff[2] !='#' && buff[3] !='#')
             return address;
+    }
+}
+void WriteToMassive(unsigned char *mass,int pos, unsigned char *str, int len)
+{
+    for(int i = 0;i < len;i++)
+    {
+        if(pos < OBSERVER_MAX_LENGHT)
+        {
+            mass[pos] = str[i];
+            pos++;
+        }
+        else
+            break;
     }
 }
 unsigned long GetAddress(const unsigned char *stream, int startbyte)

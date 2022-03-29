@@ -84,6 +84,8 @@
 #define     DELAY_OF_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES             5
 #define     DELAY_OF_ADDITIONAL_WAITING_CONFIRM_ROUTER_STATUS_FROM_DEVICES  5
 
+#define     OBSERVER_MAX_LENGHT                                             28
+
 //---------------------------------------------РАБОЧИЕ ПОЛЯ-------------------------------------------------------------
 
 /**
@@ -198,7 +200,7 @@ typedef struct  WorkTable
     /////////////   РАБОЧИЕ ТАБЛИЦЫ
     unsigned long   gateway;
     unsigned long   temporary_prev_address;
-    UpRouter  my_routers[2];
+    UpRouter        my_routers[2];
     unsigned long   i_reserve_router_for[MAX_DEVICES_FOR_WHICH_IM_RESERVE_ROUTER];
     unsigned long   i_main_router_for[MAX_DEVICES_FOR_WHICH_IM_MAIN_ROUTER];
     unsigned char   charPacketBuffer[FULL_PACKET_LENGHT];
@@ -209,6 +211,9 @@ typedef struct  WorkTable
     unsigned long   current_time;
     unsigned long   delta_time;
     unsigned long   start_status_time;
+    /////////////   НАБЛЮДАТЕЛЬ
+    unsigned char   ObserverString[OBSERVER_MAX_LENGHT];
+
 } WorkTable;
 ///////////////////////ОСНОВНОЙ МЕНЕДЖЕР/////////////////////////
 int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, unsigned char *instream, unsigned char *outstream, int len);
@@ -216,9 +221,11 @@ int            PacketManager(unsigned char *sens, int RSSI, WorkTable * ram, uns
 Packet          ParsePacket(const unsigned char *stream);
 unsigned char   Validator(WorkTable * ram, Packet pack);
 void            StatusController(WorkTable * ram);
-int            QueueManager(unsigned char *outstream, WorkTable *ram);
+int             QueueManager(unsigned char *outstream, WorkTable *ram);
+int             UpdateObserver(WorkTable *ram);
 /////////////////////////ИНСТРУМЕНТЫ/////////////////////////////
 unsigned long   GetRandomAddress();
+void            WriteToMassive(unsigned char *mass, int pos, unsigned char *str, int len);
 unsigned long   GetAddress(const unsigned char *stream, int startbyte);
 void            GetAddressChar(char * buff, unsigned long stream);
 void            packetConstructor(WorkTable *ram,
